@@ -40,7 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Use MeshNormalMaterial for a colorful, light-less effect
         const material = new THREE.MeshNormalMaterial(); 
 
-        for (let i = 0; i < 150; i++) { 
+        // UPDATED: Reduced the number of shapes to 50
+        for (let i = 0; i < 50; i++) { 
             const geometry = geometries[Math.floor(Math.random() * geometries.length)];
             const mesh = new THREE.Mesh(geometry, material);
             
