@@ -71,7 +71,7 @@ body {
     filter: drop-shadow(0 0 8px #FFFF00) drop-shadow(0 0 12px #FFFF00);
 }
 
-#chaser-text-bubble {
+#chaser-text {
     position: absolute;
     bottom: 110%; /* Position above the smiley */
     left: 50%;
@@ -91,7 +91,7 @@ body {
 }
 
 /* Speech bubble pointer */
-#chaser-text-bubble::after {
+#chaser-text::after {
     content: '';
     position: absolute;
     top: 100%;

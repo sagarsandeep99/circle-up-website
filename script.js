@@ -85,14 +85,34 @@ document.addEventListener('DOMContentLoaded', () => {
         // Mouse listener (fallback for desktops)
         document.addEventListener('mousemove', onDocumentMouseMove, false);
 
-        // --- 2D Smiley Click Listener ---
+        // --- 2D Smiley Click Listener (MODIFIED) ---
         if (chaserSmiley) {
-            chaserSmiley.addEventListener('click', () => {
+
+            // This handler will only run ONCE for the *first* click
+            const onSmileyFirstClick = () => {
                 moveChaser();
                 tauntUser();
-            });
+                
+                // Stop repositioning it next to the tagline on resize
+                window.removeEventListener('resize', positionChaserInitially);
+
+                // Now, add the "normal" click listener for all future clicks
+                chaserSmiley.addEventListener('click', () => {
+                    moveChaser();
+                    tauntUser();
+                });
+            };
+
+            // Add the "first click" listener, which runs only once
+            chaserSmiley.addEventListener('click', onSmileyFirstClick, { once: true });
             
-            // Make it visible once JS is loaded
+            // Position it for the first time
+            positionChaserInitially(); 
+            
+            // Add a resize listener to keep it in place (until it's clicked)
+            window.addEventListener('resize', positionChaserInitially);
+
+            // Make it visible once JS is loaded and positioned
             chaserContainer.style.visibility = 'visible';
         }
         
@@ -188,6 +208,29 @@ document.addEventListener('DOMContentLoaded', () => {
         chaserTextElement.innerText = taunts[newIndex];
     }
 
+    // --- NEW FUNCTION ---
+    // Positions the chaser next to the tagline initially
+    function positionChaserInitially() {
+        const tagline = document.getElementById('tagline');
+        // Ensure elements exist before trying to get properties
+        if (!tagline || !chaserContainer) {
+            return;
+        }
+
+        const rect = tagline.getBoundingClientRect();
+        // Get chaser height. Using 40 as a fallback from its SVG height/width.
+        const chaserHeight = chaserContainer.offsetHeight || 40; 
+        
+        // Calculate position
+        // Top: Align center of smiley with center of tagline
+        const newTop = rect.top + (rect.height / 2) - (chaserHeight / 2);
+        // Left: Place 10px to the right of the tagline's text box
+        const newLeft = rect.right + 10; 
+
+        chaserContainer.style.top = `${newTop}px`;
+        chaserContainer.style.left = `${newLeft}px`;
+    }
+
 
     // --- Animation Loop ---
 
@@ -215,9 +258,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Animate 2D Chaser (bobbing)
-        if (chaserContainer) {
+        // We check for chaserContainer.style.transform to avoid overwriting
+        // the initial position set by positionChaserInitially()
+        if (chaserContainer && chaserContainer.style.transform.includes('translateY')) {
             const bob = Math.sin(Date.now() * 0.005) * 5; // 5px up and down
-            chaserContainer.style.transform = `translate(-50%, -50%) translateY(${bob}px)`;
+            chaserContainer.style.transform = `translateY(${bob}px)`;
+        } else if (chaserContainer && !chaserContainer.style.transform) {
+             // Start the bobbing animation
+             chaserContainer.style.transform = `translateY(0px)`;
         }
         
         renderer.render(scene, camera);
@@ -232,6 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- MODAL LOGIC ---
+    // ... (No changes to this section) ...
 
     // Get modal elements
     const imageModal = document.getElementById('image-modal');
@@ -296,6 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Mobile Menu Toggle ---
+    // ... (No changes to this section) ...
     const menuBtn = document.getElementById('menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
     const menuIconOpen = document.getElementById('menu-icon-open');
@@ -313,6 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Activities Dropdown Logic ---
+    // ... (No changes to this section) ...
     
     // Desktop
     const navActivitiesLink = document.getElementById('nav-activities-link');
