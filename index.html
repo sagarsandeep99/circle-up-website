@@ -1,190 +1,240 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- UPDATED: Title changed -->
     <title>Circle Up</title>
-    
-    <!-- Load Tailwind CSS -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Load three.js -->
+    <!-- Google Fonts: Inter (body) & Pacifico (logo) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Pacifico&display=swap"
+        rel="stylesheet">
+    <!-- three.js Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
-    <!-- Link our new stylesheet -->
+    <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="style.css">
-
 </head>
-<body class="bg-gray-900 text-white">
+
+<body class="bg-[#0f0f1a] text-white font-['Inter'] overflow-x-hidden">
 
     <!-- 3D Background Canvas -->
-    <canvas id="bg-canvas"></canvas>
+    <canvas id="bg-canvas" class="fixed top-0 left-0 w-full h-full -z-10"></canvas>
 
-    <!-- Header Navigation -->
-    <nav class="glass-effect fixed top-0 left-0 right-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <!-- Logo/Brand -->
-                <div class="flex-shrink-0">
-                    <a href="#" class="font-pacifico text-3xl text-white">Circle Up</a>
-                </div>
-                
-                <!-- Desktop Links -->
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="#about" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">About Us</a>
-                        
-                        <!-- Activities Dropdown Container -->
-                        <div class="relative" id="activities-nav-container">
-                            <button id="nav-activities-link" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center gap-1 cursor-pointer">
-                                <span>Activities</span>
-                                <svg id="nav-activities-arrow" class="w-4 h-4 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                                </svg>
-                            </button>
-                            <!-- Dropdown Menu -->
-                            <div id="nav-activities-dropdown" class="absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg py-1 glass-effect z-50 hidden">
-                                <a href="#charades-card" class="dropdown-link">Dumb Charades</a>
-                                <a href="#pictionary-card" class="dropdown-link">Pictionary</a>
-                                <a href="#karaoke-card" class="dropdown-link">Karaoke</a>
-                            </div>
-                        </div>
-
-                        <a href="#contact" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Contact Us</a>
-                    </div>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <div class="-mr-2 flex md:hidden">
-                    <button id="menu-btn" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
-                        <span class="sr-only">Open main menu</span>
-                        <svg id="menu-icon-open" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                        <svg id="menu-icon-close" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
+    <!-- NEW: 2D Chaser Figure (Smiley) -->
+    <!-- This floats ON TOP of all content (z-30) -->
+    <div id="chaser-container" class="fixed top-1/2 left-1/2 z-30" style="visibility: hidden;">
+        <!-- Text Bubble -->
+        <div id="chaser-text" class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2">
+            Catch me!
         </div>
+        <!-- Smiley SVG -->
+        <svg id="chaser-smiley" xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 cursor-pointer"
+            viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="48" fill="#FFFF00" stroke="#000000" stroke-width="4" />
+            <circle cx="35" cy="40" r="5" fill="#000000" />
+            <circle cx="65" cy="40" r="5" fill="#000000" />
+            <path d="M 30 65 Q 50 80 70 65" stroke="#000000" stroke-width="5" fill="none" stroke-linecap="round" />
+        </svg>
+    </div>
 
-        <!-- Mobile menu, show/hide based on menu state. -->
-        <div class="md:hidden hidden" id="mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#about" class="nav-link-mobile">About Us</a>
-                
-                <!-- Mobile Activities Dropdown -->
-                <div>
-                    <button id="mobile-nav-activities-link" class="w-full text-left text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium flex items-center justify-between gap-1 cursor-pointer">
+
+    <!-- Header Navigation (z-20) -->
+    <header class="fixed top-0 left-0 w-full z-20">
+        <!-- ... existing header code ... -->
+        <nav
+            class="container mx-auto max-w-6xl px-4 py-3 flex justify-between items-center bg-gray-900/30 backdrop-blur-lg rounded-b-xl shadow-lg md:mt-4">
+            <!-- Logo -->
+            <a href="#" class="font-['Pacifico'] text-3xl text-white">Circle Up</a>
+
+            <!-- Desktop Nav -->
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#about" class="nav-link">About Us</a>
+
+                <!-- Desktop Activities Dropdown -->
+                <div class="relative" id="activities-nav-container">
+                    <a href="#" id="nav-activities-link" class="nav-link flex items-center space-x-1">
                         <span>Activities</span>
-                        <svg id="mobile-nav-activities-arrow" class="w-4 h-4 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                        <svg id="nav-activities-arrow" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform"
+                            viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                clip-rule="evenodd" />
                         </svg>
-                    </button>
-                    <div id="mobile-nav-activities-dropdown" class="pl-4 mt-2 space-y-1 hidden">
-                        <a href="#charades-card" class="dropdown-link-mobile">Dumb Charades</a>
-                        <a href="#pictionary-card" class="dropdown-link-mobile">Pictionary</a>
-                        <a href="#karaoke-card" class="dropdown-link-mobile">Karaoke</a>
+                    </a>
+                    <!-- Dropdown Menu -->
+                    <div id="nav-activities-dropdown"
+                        class="hidden absolute top-full left-0 mt-2 w-48 bg-gray-800/80 backdrop-blur-lg rounded-lg shadow-xl overflow-hidden">
+                        <a href="#charades-card" class="dropdown-link">Dumb Charades</a>
+                        <a href="#pictionary-card" class="dropdown-link">Pictionary</a>
+                        <a href="#karaoke-card" class="dropdown-link">Karaoke</a>
                     </div>
                 </div>
 
-                <a href="#contact" class="nav-link-mobile">Contact Us</a>
+                <a href="#contact" class="nav-link">Contact Us</a>
             </div>
-        </div>
-    </nav>
 
-    <!-- Main Content -->
-    <div class="relative flex flex-col items-center justify-center p-4 pt-24 pb-16">
-        
-        <!-- Header Section -->
-        <div class="text-center mb-12">
-            <h1 class="font-pacifico text-6xl md:text-8xl text-white mb-2">Circle Up</h1>
-            <p class="text-2xl text-gray-300">C U Around</p>
-            
-            <!-- REMOVED: Motion Control Button -->
-        </div>
+            <!-- Mobile Menu Button -->
+            <button id="menu-btn" class="md:hidden z-30">
+                <!-- Hamburger Icon -->
+                <svg id="menu-icon-open" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white block" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+                <!-- Close Icon -->
+                <svg id="menu-icon-close" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white hidden"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </nav>
+    </header>
 
-        <!-- About Us Section -->
-        <div id="about" class="glass-effect rounded-2xl p-6 shadow-2xl w-full max-w-4xl mb-12 scroll-mt-20">
-            <h2 class="text-3xl font-bold text-white mb-6 text-center">About Us</h2>
-            
-            <!-- UPDATED: Replaced single <p> with a div and multiple <p> tags for spacing -->
-            <div class="text-lg md:text-xl text-center text-gray-200 leading-relaxed space-y-4">
-                <p>
-                    At Circle Up, strangers don’t stay strangers for long. We host cozy hangouts where real talks, good vibes, and belly laughs flow naturally.
-                </p>
-                <p>
-                    Our mission? We create spaces to help you find your circle, where conversations click and connections stick.
-                </p>
-                <p>
-                    Because hey, every connection starts with a ‘C U Around.’
-                </p>
-            </div>
-        </div>
+    <!-- Mobile Menu (z-10) -->
+    <div id="mobile-menu"
+        class="hidden md:hidden fixed top-0 left-0 w-full h-screen bg-gray-900/90 backdrop-blur-xl z-10 pt-24">
+        <div class="container mx-auto max-w-6xl px-8 flex flex-col space-y-4 text-center">
+            <a href="#about" class="nav-link-mobile">About Us</a>
 
-        <!-- Game Cards Section -->
-        <h2 id="activities" class="text-3xl font-bold text-white mb-8 text-center scroll-mt-20">
-            Tonight's Games
-        </h2>
-        <!-- The grid is now VISIBLE by default (removed 'hidden' class) -->
-        <!-- Added scroll-mt-20 to each card for better anchor linking -->
-        <div id="activities-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-4xl">
-            <!-- Dumb Charades Card -->
-            <div id="charades-card" class="glass-effect rounded-2xl p-6 shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-cyan-500/30 cursor-pointer h-48 flex items-center justify-center scroll-mt-20">
-                <h2 class="text-3xl font-bold text-cyan-300">Dumb Charades</h2>
-            </div>
-            
-            <!-- Pictionary Card -->
-            <div id="pictionary-card" class="glass-effect rounded-2xl p-6 shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-pink-500/30 cursor-pointer h-48 flex items-center justify-center scroll-mt-20">
-                <h2 class="text-3xl font-bold text-pink-300">Pictionary</h2>
-            </div>
-            
-            <!-- Karaoke Card -->
-            <div id="karaoke-card" class="glass-effect rounded-2xl p-6 shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-yellow-500/30 cursor-pointer h-48 flex items-center justify-center scroll-mt-20">
-                <h2 class="text-3xl font-bold text-yellow-300">Karaoke</h2>
-            </div>
-        </div>
-
-        <!-- Contact Us Section -->
-        <div id="contact" class="glass-effect rounded-2xl p-6 shadow-2xl w-full max-w-4xl mt-12 scroll-mt-20">
-            <h2 class="text-3xl font-bold text-white mb-8 text-center">Get In Touch</h2>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-8">
-                
-                <!-- UPDATED: WhatsApp link text -->
-                <a href="https://api.whatsapp.com/send?phone=8217678506&text=Knock%20knock!%0AJust%20landed%20at%20Circle%20Up%20HQ.%20Seeking%20partners%20in%20crime%20and%20good%20vibes%20only%20%E2%9C%A8%0AGot%20room%20for%20one%20more%3F" target="_blank" rel="noopener noreferrer" class="flex items-center space-x-3 text-gray-200 hover:text-white transition-colors duration-300">
-                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.06 21.94L7.3 20.58C8.77 21.39 10.37 21.82 12.04 21.82C17.5 21.82 21.95 17.37 21.95 11.91C21.95 6.45 17.5 2 12.04 2ZM17.83 15.24C17.58 15.82 16.5 16.36 16.12 16.42C15.74 16.48 15.2 16.5 14.68 16.33C14.16 16.15 13.06 15.79 11.83 14.65C10.33 13.26 9.38 11.5 9.13 11.12C8.88 10.74 8.7 10.53 8.7 10.2C8.7 9.87 8.86 9.71 9.02 9.55C9.18 9.39 9.37 9.25 9.53 9.11C9.65 9.02 9.74 8.93 9.83 8.8C9.92 8.68 9.89 8.57 9.8 8.45C9.71 8.34 9.27 7.21 9.07 6.74C8.87 6.27 8.68 6.33 8.53 6.32C8.38 6.31 8.16 6.31 7.95 6.31C7.73 6.31 7.42 6.37 7.14 6.64C6.87 6.92 6.13 7.6 6.13 8.91C6.13 10.22 7.17 11.47 7.33 11.69C7.49 11.91 9.04 14.31 11.4 15.3C13.29 16.07 14.31 16.2 14.88 16.14C15.54 16.07 16.53 15.5 16.81 14.92C17.09 14.34 17.09 13.85 17.01 13.73C16.93 13.61 16.76 13.55 16.51 13.43C16.26 13.31 15.82 13.09 15.58 13C15.34 12.91 15.19 12.85 15.04 13.1C14.89 13.35 14.39 13.91 14.24 14.07C14.09 14.23 13.94 14.26 13.72 14.17C13.49 14.08 12.72 13.8 11.75 12.94C11.02 12.28 10.53 11.44 10.37 11.12C10.22 10.8 10.3 10.66 10.45 10.53C10.59 10.4 10.74 10.24 10.9 10.08C11.06 9.92 11.13 9.8 11.22 9.68C11.32 9.56 11.35 9.44 11.3 9.32C11.25 9.2 10.76 7.99 10.56 7.52C10.37 7.05 10.18 7.11 10.03 7.1C9.88 7.09 9.66 7.09 9.45 7.09C9.23 7.09 8.92 7.15 8.64 7.42C8.37 7.7 7.63 8.37 7.63 9.68C7.63 10.99 8.67 12.24 8.83 12.46C8.99 12.68 10.54 15.08 12.9 16.07C14.79 16.84 15.81 17 16.38 16.91C17.04 16.85 18.03 16.27 18.31 15.69C18.59 15.11 18.59 14.62 18.51 14.5C18.43 14.38 18.26 14.32 18.01 14.2C17.76 14.08 17.32 13.86 17.08 13.75C16.84 13.66 16.69 13.6 16.54 13.85C16.39 14.1 15.89 14.66 15.74 14.82C15.59 14.98 15.44 15.01 15.22 14.92C14.99 14.83 14.22 14.57 13.25 13.7C12.52 13.05 12.03 12.2 11.87 11.88C11.72 11.56 11.8 11.42 11.95 11.29C12.09 11.16 12.24 11 12.4 10.84C12.56 10.68 12.63 10.56 12.72 10.44C12.82 10.32 12.85 10.2 12.8 10.08C12.75 9.96 12.26 8.76 12.06 8.28C11.87 7.81 11.68 7.87 11.53 7.86C11.38 7.85 11.16 7.85 10.95 7.85C10.73 7.85 10.42 7.91 10.14 8.18C9.87 8.46 9.13 9.13 9.13 10.44C9.13 11.75 10.17 12.99 10.33 13.22C10.49 13.44 12.04 15.83 14.4 16.8C16.29 17.57 17.31 17.7 17.88 17.64C18.54 17.57 19.53 17 19.81 16.42C20.09 15.84 20.09 15.35 20.01 15.23C19.93 15.11 19.76 15.05 19.51 14.93C19.26 14.81 18.82 14.59 18.58 14.48C18.34 14.39 18.19 14.33 18.04 14.58C17.89 14.83 17.39 15.39 17.24 15.55C17.09 15.71 16.94 15.74 16.72 15.65C16.49 15.56 15.72 15.3 14.75 14.44C14.02 13.79 13.53 12.96 13.37 12.64C13.22 12.32 13.3 12.18 13.45 12.05C13.59 11.92 13.74 11.76 13.9 11.6C14.06 11.44 14.13 11.32 14.22 11.2C14.32 11.08 14.35 10.96 14.3 10.84C14.25 10.72 13.76 9.52 13.56 9.04C13.37 8.57 13.18 8.63 13.03 8.62C12.88 8.61 12.66 8.61 12.45 8.61C12.23 8.61 11.92 8.67 11.64 8.94C11.37 9.22 10.63 9.89 10.63 11.2C10.63 12.51 11.67 13.76 11.83 13.98C11.99 14.2 13.54 16.6 15.9 17.57C17.79 18.34 18.81 18.47 19.38 18.41C20.04 18.34 21.03 17.77 21.31 17.19C21.59 16.61 21.59 16.12 21.51 16C21.43 15.88 21.26 15.82 21.01 15.7C20.76 15.58 20.32 15.36 20.08 15.25C19.84 15.16 19.69 15.1 19.54 15.35C19.39 15.6 18.89 16.16 18.74 16.32C18.59 16.48 18.44 16.51 18.22 16.42C17.99 16.33 17.22 16.07 16.25 15.2C15.52 14.55 15.03 13.72 14.87 13.4C14.72 13.08 14.8 12.94 14.95 12.81C15.09 12.68 15.24 12.52 15.4 12.36C15.56 12.2 15.63 12.08 15.72 11.96C15.82 11.84 15.85 11.72 15.8 11.6C1S.75 11.48 15.26 10.28 15.06 9.8C14.87 9.33 14.68 9.39 14.53 9.38C14.38 9.37 14.16 9.37 13.95 9.37C13.73 9.37 13.42 9.43 13.14 9.7C12.87 9.98 12.13 10.65 12.13 11.96C12.13 13.27 13.17 14.52 13.33 14.74C13.49 14.96 15.04 17.36 17.4 18.33C19.29 19.1 20.31 19.23 20.88 19.17C21.54 19.1 22.53 18.53 22.81 17.95C23.09 17.37 23.09 16.88 23.01 16.76C22.93 16.64 22.76 16.58 22.51 16.46C22.26 16.34 21.82 16.12 21.58 16.01C21.34 15.92 21.19 15.86 21.04 16.11C20.89 16.36 20.39 16.92 20.24 17.08C20.09 17.24 19.94 17.27 19.72 17.18C19.49 17.09 18.72 16.83 17.75 15.96C17.02 15.31 16.53 14.48 16.37 14.16C16.22 13.84 16.3 13.7 16.45 13.57C16.59 13.44 16.74 13.28 16.9 13.12C17.06 12.96 17.13 12.84 17.22 12.72C17.32 12.6 17.35 12.48 17.3 12.36C17.25 12.24 16.76 11.04 16.56 10.56C16.37 10.09 16.18 10.15 16.03 10.14C15.88 10.13 15.66 10.13 15.45 10.13C15.23 10.13 14.92 10.19 14.64 10.46C14.37 10.74 13.63 11.41 13.63 12.72C13.63 14.03 14.67 15.28 14.83 15.5C14.99 15.72 16.54 18.12 18.9 19.09C20.79 19.86 21.81 19.99 22.38 19.93C23.04 19.86 24 19.29 24 18.71C24 18.13 24 17.64 23.92 17.52C23.84 17.4 23.67 17.34 23.42 17.22C23.17 17.1 22.73 16.88 22.49 16.77C22.25 16.68 22.1 16.62 21.95 16.87C21.8 17.12 21.3 17.68 21.15 17.84C21 18 20.85 18.03 20.63 17.94C20.4 17.85 19.63 17.59 18.66 16.72C17.93 16.07 17.44 15.24 17.28 14.92C17.13 14.6 17.21 14.46 17.36 14.33C17.5 14.2 17.65 14.04 17.81 13.88C17.97 13.72 18.04 13.6 18.13 13.48C18.23 13.36 18.26 13.24 18.21 13.12C18.16 13 17.67 11.8 17.47 11.32C17.28 10.85 17.09 10.91 16.94 10.9C16.79 10.89 16.57 10.89 16.36 10.89Z"/></svg>
-                    <span class="text-lg">WhatsApp</span>
+            <!-- Mobile Activities Dropdown -->
+            <div class="relative">
+                <a href="#" id="mobile-nav-activities-link"
+                    class="nav-link-mobile flex items-center justify-center space-x-1">
+                    <span>Activities</span>
+                    <svg id="mobile-nav-activities-arrow" xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
+                    </svg>
                 </a>
-                <!-- Instagram -->
-                <a href="https://www.instagram.com/circleup.irl" target="_blank" rel="noopener noreferrer" class="flex items-center space-x-3 text-gray-200 hover:text-white transition-colors duration-300">
-                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.148 3.227-1.664 4.771-4.919 4.919-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.646-.07-4.85s.012-3.584.07-4.85c.149-3.227 1.664-4.771 4.919-4.919C8.416 2.175 8.796 2.163 12 2.163m0-2.163C8.74 0 8.333.011 7.053.069 2.73 1.22.26 2.73.118 7.053.06 8.333.049 8.74 0 12c.049 3.26.06 3.667.118 4.947.15 4.323 1.658 5.83 5.97 5.97C8.333 23.988 8.74 24 12 24s3.667-.011 4.947-.069c4.323-.15 5.83-1.658 5.97-5.97C23.988 15.667 24 15.26 24 12s-.012-3.667-.069-4.947c-.15-4.323-1.658-5.83-5.97-5.97C15.667.06 15.26 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.88 1.44 1.44 0 000-2.88z"/></svg>
-                    <span class="text-lg">Instagram</span>
-                </a>
-                <!-- YouTube -->
-                <a href="https://www.youtube.com/@circleupirl" target="_blank" rel="noopener noreferrer" class="flex items-center space-x-3 text-gray-200 hover:text-white transition-colors duration-300">
-                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                    <span class="text-lg">YouTube</span>
-                </a>
+                <!-- Dropdown Menu -->
+                <div id="mobile-nav-activities-dropdown" class="hidden mt-2 w-full rounded-lg shadow-xl overflow-hidden">
+                    <a href="#charades-card" class="dropdown-link-mobile">Dumb Charades</a>
+                    <a href="#pictionary-card" class="dropdown-link-mobile">Pictionary</a>
+                    <a href="#karaoke-card" class="dropdown-link-mobile">Karaoke</a>
+                </div>
             </div>
-        </div>
 
-    </div>
-
-    <!-- Modal for IMAGE (replaces prompt-modal) -->
-    <div id="image-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50 hidden">
-        <div class="glass-effect rounded-2xl p-6 pt-12 shadow-2xl w-full max-w-lg relative">
-            <button id="close-image-modal" class="absolute top-3 right-4 text-gray-300 hover:text-white text-4xl">&times;</button>
-            <h2 id="modal-title" class="text-3xl font-bold mb-4 text-center">Activity Title</h2>
-            <div class="bg-gray-900 rounded-lg p-2">
-                <!-- Image will be loaded here -->
-                <img id="modal-image" src="" alt="Activity Image" class="w-full h-auto rounded-md max-h-[70vh] object-contain">
-                <!-- You can also add a <video> tag here in the future -->
-            </div>
+            <a href="#contact" class="nav-link-mobile">Contact Us</a>
         </div>
     </div>
 
-    <script src="script.js" defer></script>
+
+    <!-- Main Content (z-10) -->
+    <main class="relative z-10 container mx-auto max-w-3xl px-6 pt-32 md:pt-48 pb-24">
+        <div class="flex flex-col items-center text-center space-y-12">
+
+            <!-- Hero Section -->
+            <section class="flex flex-col items-center text-center">
+                <h1 class="font-['Pacifico'] text-7xl md:text-8xl text-white mb-2"
+                    style="text-shadow: 0 0 15px rgba(255,255,255,0.3);">
+                    Circle Up
+                </h1>
+                <p class="text-2xl md:text-3xl text-gray-300">C U Around</p>
+            </section>
+
+            <!-- About Us Section -->
+            <section id="about" class="glass-card w-full text-center">
+                <h2 class="text-3xl font-bold mb-6">About Us</h2>
+                <!-- Updated paragraph structure -->
+                <div class="text-lg md:text-xl text-gray-200 space-y-4">
+                    <p>
+                        At Circle Up, strangers don’t stay strangers for long. We host cozy hangouts where real talks,
+                        good vibes, and belly laughs flow naturally.
+                    </p>
+                    <p>
+                        Our mission? We create spaces to help you find your circle, where conversations click and
+                        connections stick.
+                    </p>
+                    <p>
+                        Because hey, every connection starts with a ‘C U Around.’
+                    </p>
+                </div>
+            </section>
+
+            <!-- Activities Section -->
+            <section id="activities" class="w-full">
+                <h2 class="text-3xl font-bold mb-6 text-center">Tonight's Games</h2>
+                <div id="activities-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Card 1: Dumb Charades -->
+                    <div id="charades-card"
+                        class="activity-card border-cyan-400/50 hover:border-cyan-300 text-cyan-300">
+                        <h3 class="text-3xl font-bold">Dumb Charades</h3>
+                    </div>
+
+                    <!-- Card 2: Pictionary -->
+                    <div id="pictionary-card"
+                        class="activity-card border-pink-400/50 hover:border-pink-300 text-pink-300">
+                        <h3 class="text-3xl font-bold">Pictionary</h3>
+                    </div>
+
+                    <!-- Card 3: Karaoke -->
+                    <div id="karaoke-card"
+                        class="activity-card border-yellow-400/50 hover:border-yellow-300 text-yellow-300">
+                        <h3 class="text-3xl font-bold">Karaoke</h3>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Us Section -->
+            <section id="contact" class="glass-card w-full">
+                <h2 class="text-3xl font-bold mb-6">Get In Touch</h2>
+                <div class="flex justify-center items-center space-x-6 md:space-x-8">
+                    <!-- WhatsApp -->
+                    <a href="https://api.whatsapp.com/send?phone=8217678506&text=Knock%20knock!%0AJust%20landed%20at%20Circle%20Up%20HQ.%20Seeking%20partners%20in%20crime%20and%20good%20vibes%20only%20%E2%9C%A8%0AGot%20room%20for%20one%20more%3F"
+                        target="_blank" rel="noopener noreferrer" class="contact-link">
+                        <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.0-6.556 5.333-11.891 11.893-11.891 3.181.0 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.0 6.557-5.335 11.89-11.891 11.89-1.996 0-3.903-.52-5.607-1.474l-6.17 1.688a.6.6 0 0 1-.75-.751zM11.893 2.906c-5.464 0-9.89 4.428-9.89 9.891.0 1.93.558 3.78 1.59 5.34l-.423 1.543 1.583-.41c1.474.902 3.22.144 5.039.144 5.465 0 9.89-4.428 9.89-9.89 0-5.464-4.426-9.89-9.89-9.89zm6.308 12.036c-.223-.112-1.32-.652-1.524-.726-.204-.074-.35-.112-.497.112-.147.224-.578.727-.708.874-.13.147-.26.167-.484.056-.223-.112-.944-.347-1.8-.1.104-.664.288-.874.112-.147-.037-.056-.074-.13-.112-.056-.019-.112-.037-.168-.056-.056-.019-.112-.037-.147-.056l-.112-.019c-.204-.037-.33-.074-.457-.204-.127-.13-.26-.26-.37-.41s-.112-.187-.019-.33c.094-.147.187-.26.28-.37.094-.112.13-.187.187-.28s.074-.168.037-.28c-.037-.112-.056-.147-.074-.168-.019-.019-.037-.037-.056-.056-.019-.019-.037-.037-.037-.056-.019-.019-.037-.037-.056-.074l-.112-.074c-.13-.074-.24-.13-.33-.168s-.187-.074-.28-.074c-.094 0-.168-.019-.24-.019-.074 0-.147 0-.223.019s-.204.019-.28.019c-.074 0-.147.019-.223.019-.074 0-.147.019-.204.019-.056 0-.112.019-.168.019l-.112.019c-.24.037-.48.112-.676.223-.196.112-.37.26-.508.43s-.223.37-.28.56c-.056.187-.074.37-.074.56s.019.37.056.56c.037.187.094.37.168.56s.147.35.24.5.204.31.33.46c.127.147.26.3.41.43.147.13.31.24.48.33s.35.168.54.223c.187.056.39.094.6.112.204.019.41.019.6.019s.39-.019.58-.056c.187-.037.37-.094.54-.168s.33-.168.48-.28c.147-.112.28-.24.41-.37s.24-.26.33-.41c.094-.147.168-.3.223-.46s.094-.33.112-.5.019-.33.019-.52c0-.094-.019-.187-.037-.28s-.056-.168-.094-.24z" />
+                        </svg>
+                        <span class="ml-2">WhatsApp</span>
+                    </a>
+                    <!-- Instagram -->
+                    <a href="https://www.instagram.com/circleup.irl" target="_blank" rel="noopener noreferrer"
+                        class="contact-link">
+                        <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM12 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                        </svg>
+                        <span class="ml-2">Instagram</span>
+                    </a>
+                    <!-- YouTube -->
+                    <a href="https://www.youtube.com/@circleupirl" target="_blank" rel="noopener noreferrer"
+                        class="contact-link">
+                        <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                        </svg>
+                        <span class="ml-2">YouTube</span>
+                    </a>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Image Modal (z-40) -->
+    <div id="image-modal"
+        class="hidden fixed top-0 left-0 w-full h-full bg-black/80 backdrop-blur-sm z-40 flex items-center justify-center p-6">
+        <div class="bg-gray-800 p-6 rounded-2xl shadow-xl max-w-2xl w-full relative">
+            <!-- Close Button -->
+            <button id="close-image-modal"
+                class="absolute -top-3 -right-3 bg-red-600 text-white rounded-full h-10 w-10 flex items-center justify-center text-2xl font-bold">&times;</button>
+            <!-- Modal Content -->
+            <h2 id="modal-title" class="text-3xl font-bold mb-4 text-center">Modal Title</h2>
+            <div class="aspect-video w-full rounded-lg overflow-hidden bg-gray-900">
+                <img id="modal-image" src="" alt="Activity Image" class="w-full h-full object-cover">
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Main JavaScript File -->
+    <script src="script.js"></script>
+
 </body>
+
 </html>

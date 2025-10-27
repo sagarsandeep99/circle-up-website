@@ -8,6 +8,26 @@ document.addEventListener('DOMContentLoaded', () => {
     let scene, camera, renderer, shapes;
     let targetMouse = new THREE.Vector2(); // This will be controlled by EITHER mouse or gyro
 
+
+    // --- 2D Chaser Game Variables ---
+    let chaserContainer, chaserSmiley, chaserTextElement;
+    const taunts = [
+        "Almost!",
+        "Try again!",
+        "Too slow!",
+        "Don't leave me!",
+        "Haha!",
+        "Catch me!",
+        "Wanna give up?"
+    ];
+    let lastTauntIndex = -1; // To track the last used taunt
+
+    // Get the chaser 2D elements
+    chaserContainer = document.getElementById('chaser-container');
+    chaserSmiley = document.getElementById('chaser-smiley');
+    chaserTextElement = document.getElementById('chaser-text');
+
+
     function init3D() {
         // Scene
         scene = new THREE.Scene();
@@ -25,10 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
         renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
 
-        // Shapes
+        // Shapes (Background)
         shapes = [];
-        
-        // --- UPDATED GEOMETRIES ---
         const geometries = [
             new THREE.IcosahedronGeometry(0.5, 0),      // Diamond
             new THREE.SphereGeometry(0.4, 16, 16),      // Ball
@@ -36,22 +54,22 @@ document.addEventListener('DOMContentLoaded', () => {
             new THREE.TetrahedronGeometry(0.7),         // Triangle
             new THREE.TorusGeometry( 0.4, 0.15, 16, 40 ) // Donut
         ];
-        
-        // Use MeshNormalMaterial for a colorful, light-less effect
         const material = new THREE.MeshNormalMaterial(); 
 
-        // UPDATED: Set the total number of shapes to 100
-        for (let i = 0; i < 100; i++) { 
+        for (let i = 0; i < 100; i++) { // Set to 100 shapes total
             const geometry = geometries[Math.floor(Math.random() * geometries.length)];
             const mesh = new THREE.Mesh(geometry, material);
             
+            // Random positions
             mesh.position.x = (Math.random() - 0.5) * 25;
             mesh.position.y = (Math.random() - 0.5) * 25;
             mesh.position.z = (Math.random() - 0.5) * 25;
 
+            // Random scales
             const scale = 0.5 + Math.random() * 1.5;
             mesh.scale.set(scale, scale, scale);
 
+            // Store speed
             mesh.userData.speed = {
                 x: (Math.random() - 0.5) * 0.005,
                 y: (Math.random() - 0.5) * 0.005
@@ -60,24 +78,34 @@ document.addEventListener('DOMContentLoaded', () => {
             shapes.push(mesh);
             scene.add(mesh);
         }
-
-        // Handle window resize
+        
+        // --- Event Listeners ---
         window.addEventListener('resize', onWindowResize, false);
         
-        // --- UPDATED: Add mouse listener by default ---
-        // This will serve as the fallback for desktops.
+        // Mouse listener (fallback for desktops)
         document.addEventListener('mousemove', onDocumentMouseMove, false);
 
-        animate();
+        // --- 2D Smiley Click Listener ---
+        if (chaserSmiley) {
+            chaserSmiley.addEventListener('click', () => {
+                moveChaser();
+                tauntUser();
+            });
+            
+            // Make it visible once JS is loaded
+            chaserContainer.style.visibility = 'visible';
+        }
         
-        // --- NEW: Attempt to enable motion controls on first user interaction ---
-        // This is necessary to trigger the permission prompt on iOS.
+        // Attempt motion controls on first interaction
         document.body.addEventListener('click', attemptMotionControl, { once: true });
         document.body.addEventListener('touchstart', attemptMotionControl, { once: true });
+
+        // Start animation
+        animate();
     }
 
     
-    // --- NEW: Motion Control Logic ---
+    // --- Motion Control Logic ---
 
     function attemptMotionControl() {
         // Check if the API is available
@@ -93,78 +121,89 @@ document.addEventListener('DOMContentLoaded', () => {
                             // Remove the mouse listener to prevent conflicts
                             document.removeEventListener('mousemove', onDocumentMouseMove, false);
                         }
-                        // If denied, the mouse listener just stays active.
                     })
-                    .catch(err => {
-                        // Handle errors (e.g., user is not on HTTPS)
-                        console.error(err);
-                    });
+                    .catch(console.error); // Handle errors
             } else {
                 // Android or other browsers that don't need explicit permission
-                // Just add the listener
                 window.addEventListener('deviceorientation', onDeviceOrientation);
-                // Remove the mouse listener to prevent conflicts
                 document.removeEventListener('mousemove', onDocumentMouseMove, false);
             }
         }
-        // If DeviceOrientationEvent is not supported at all, the mouse listener remains active.
     }
 
-    // NEW: Handles device tilt
+    // Handles device tilt
     function onDeviceOrientation(event) {
         // event.gamma: left-to-right tilt (-90 to 90)
+        let x = (event.gamma || 0); 
+        x = Math.max(-90, Math.min(90, x)) / 90; // Clamp and normalize
+        
         // event.beta: front-to-back tilt (-180 to 180)
-        
-        // We'll use gamma for x and beta for y.
-        // Normalize these values to a -1 to 1 range.
-        
-        // Gamma: -90 (left) to 90 (right). Clamp and normalize.
-        let x = (event.gamma || 0); // Get value
-        x = Math.max(-90, Math.min(90, x)) / 90; // Clamp and normalize to -1 to 1
-        
-        // Beta: A good "neutral" range is ~25 to 65 degrees (holding phone).
-        // Let's use 45 as the "center" (0) and clamp at +/- 20 degrees.
-        let y = (event.beta || 45); // Get value
+        let y = (event.beta || 45); // Use 45 as center
         y = (y - 45) / 20; // Normalize around 45, with a 20-degree range
-        
-        // Clamp values just in case
-        y = Math.max(-1, Math.min(1, y));
+        y = Math.max(-1, Math.min(1, y)); // Clamp
 
-        // Update the target vector.
-        // Note: We'll reverse 'y' like we did with the mouse.
+        // Update the target vector
         targetMouse.x = x;
-        targetMouse.y = -y;
+        targetMouse.y = -y; // Invert Y
     }
     
     // Mouse move handler (for desktops or as fallback)
     function onDocumentMouseMove(event) {
-        // Normalized device coordinates (-1 to +1)
         targetMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         targetMouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     }
-    // --- End of Motion Control Logic ---
+    
+    // --- 2D Chaser Game Logic ---
+
+    function moveChaser() {
+        if (!chaserContainer) return;
+
+        // Get viewport dimensions
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        // Get container size
+        const elWidth = chaserContainer.offsetWidth;
+        const elHeight = chaserContainer.offsetHeight;
+
+        // Calculate a random position, padding from the edges
+        const padding = 50; 
+        const newLeft = Math.random() * (vw - elWidth - (padding * 2)) + padding;
+        const newTop = Math.random() * (vh - elHeight - (padding * 2)) + padding;
+        
+        chaserContainer.style.left = `${newLeft}px`;
+        chaserContainer.style.top = `${newTop}px`;
+    }
+
+    function tauntUser() {
+        if (!chaserTextElement) return;
+        
+        // Ensure the next taunt isn't the same as the last one
+        let newIndex;
+        do {
+            newIndex = Math.floor(Math.random() * taunts.length);
+        } while (taunts.length > 1 && newIndex === lastTauntIndex); // Check to avoid infinite loop
+
+        lastTauntIndex = newIndex; // Update the last index
+        chaserTextElement.innerText = taunts[newIndex];
+    }
 
 
-    // Animation loop
+    // --- Animation Loop ---
+
     function animate() {
         requestAnimationFrame(animate);
-        if (!renderer) return; // Stop animation if renderer isn't set up
+        if (!renderer) return; 
 
-        // Add camera interaction
-        // This code doesn't care if targetMouse is from gyro or mouse!
-        // It smoothly interpolates camera position towards the target
+        // Camera interaction (gyro or mouse)
         camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetMouse.x * 2, 0.05);
         camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetMouse.y * 2, 0.05);
-        // Always look at the center
         camera.lookAt(scene.position);
 
-
-        // Animate shapes
+        // Animate background shapes
         shapes.forEach(shape => {
             shape.rotation.x += shape.userData.speed.x;
             shape.rotation.y += shape.userData.speed.y;
-
-            // Gently float around
             shape.position.x += shape.userData.speed.x * 0.5;
             shape.position.y += shape.userData.speed.y * 0.5;
 
@@ -174,6 +213,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (shape.position.x > 12) shape.position.x = -12;
             if (shape.position.x < -12) shape.position.x = 12;
         });
+
+        // Animate 2D Chaser (bobbing)
+        if (chaserContainer) {
+            const bob = Math.sin(Date.now() * 0.005) * 5; // 5px up and down
+            chaserContainer.style.transform = `translate(-50%, -50%) translateY(${bob}px)`;
+        }
         
         renderer.render(scene, camera);
     }
@@ -217,8 +262,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Event Listeners for Cards ---
     
-    // You can replace these placeholder URLs with your actual image paths.
-    // For example: './images/charades-poster.jpg'
     const placeholderUrl = (text, color) => `https://placehold.co/600x400/${color}/white?text=${text}`;
 
     if (charadesCard) {
@@ -239,7 +282,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Event listeners for closing the modal
     if (closeImageModalBtn) {
         closeImageModalBtn.addEventListener('click', closeImageModal);
     }
