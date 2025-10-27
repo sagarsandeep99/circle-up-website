@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 3D Background Setup ---
     // 'THREE' is available globally from the script tag in the <head>
     let scene, camera, renderer, shapes;
-    let targetMouse = new THREE.Vector2(); // To store mouse position
+    let targetMouse = new THREE.Vector2(); // This will be controlled by EITHER mouse or gyro
 
     function init3D() {
         // Scene
@@ -27,28 +27,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Shapes
         shapes = [];
+        
+        // --- UPDATED GEOMETRIES ---
         const geometries = [
-            new THREE.IcosahedronGeometry(0.5, 0), // Diamond
-            new THREE.SphereGeometry(0.4, 16, 16)   // Ball
+            new THREE.IcosahedronGeometry(0.5, 0),      // Diamond
+            new THREE.SphereGeometry(0.4, 16, 16),      // Ball
+            new THREE.BoxGeometry(0.8, 0.8, 0.8),       // Cube
+            new THREE.TetrahedronGeometry(0.7),         // Triangle
+            new THREE.TorusGeometry( 0.4, 0.15, 16, 40 ) // Donut
         ];
+        
         // Use MeshNormalMaterial for a colorful, light-less effect
         const material = new THREE.MeshNormalMaterial(); 
 
-        for (let i = 0; i < 150; i++) { // Increased number of shapes
-            // Pick a random geometry
+        for (let i = 0; i < 150; i++) { 
             const geometry = geometries[Math.floor(Math.random() * geometries.length)];
             const mesh = new THREE.Mesh(geometry, material);
             
-            // Random positions (spread out a bit more)
             mesh.position.x = (Math.random() - 0.5) * 25;
             mesh.position.y = (Math.random() - 0.5) * 25;
             mesh.position.z = (Math.random() - 0.5) * 25;
 
-            // Random scales
             const scale = 0.5 + Math.random() * 1.5;
             mesh.scale.set(scale, scale, scale);
 
-            // Store speed for rotation and movement
             mesh.userData.speed = {
                 x: (Math.random() - 0.5) * 0.005,
                 y: (Math.random() - 0.5) * 0.005
@@ -60,18 +62,87 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Handle window resize
         window.addEventListener('resize', onWindowResize, false);
-        // Add mouse move listener for interaction
+        
+        // --- UPDATED: Add mouse listener by default ---
+        // This will serve as the fallback for desktops.
         document.addEventListener('mousemove', onDocumentMouseMove, false);
 
         animate();
+        
+        // --- NEW: Attempt to enable motion controls on first user interaction ---
+        // This is necessary to trigger the permission prompt on iOS.
+        document.body.addEventListener('click', attemptMotionControl, { once: true });
+        document.body.addEventListener('touchstart', attemptMotionControl, { once: true });
     }
 
-    // Mouse move handler
+    
+    // --- NEW: Motion Control Logic ---
+
+    function attemptMotionControl() {
+        // Check if the API is available
+        if (window.DeviceOrientationEvent) {
+            
+            // iOS 13+ permission request
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                    .then(permissionState => {
+                        if (permissionState === 'granted') {
+                            // Permission granted: add device orientation listener
+                            window.addEventListener('deviceorientation', onDeviceOrientation);
+                            // Remove the mouse listener to prevent conflicts
+                            document.removeEventListener('mousemove', onDocumentMouseMove, false);
+                        }
+                        // If denied, the mouse listener just stays active.
+                    })
+                    .catch(err => {
+                        // Handle errors (e.g., user is not on HTTPS)
+                        console.error(err);
+                    });
+            } else {
+                // Android or other browsers that don't need explicit permission
+                // Just add the listener
+                window.addEventListener('deviceorientation', onDeviceOrientation);
+                // Remove the mouse listener to prevent conflicts
+                document.removeEventListener('mousemove', onDocumentMouseMove, false);
+            }
+        }
+        // If DeviceOrientationEvent is not supported at all, the mouse listener remains active.
+    }
+
+    // NEW: Handles device tilt
+    function onDeviceOrientation(event) {
+        // event.gamma: left-to-right tilt (-90 to 90)
+        // event.beta: front-to-back tilt (-180 to 180)
+        
+        // We'll use gamma for x and beta for y.
+        // Normalize these values to a -1 to 1 range.
+        
+        // Gamma: -90 (left) to 90 (right). Clamp and normalize.
+        let x = (event.gamma || 0); // Get value
+        x = Math.max(-90, Math.min(90, x)) / 90; // Clamp and normalize to -1 to 1
+        
+        // Beta: A good "neutral" range is ~25 to 65 degrees (holding phone).
+        // Let's use 45 as the "center" (0) and clamp at +/- 20 degrees.
+        let y = (event.beta || 45); // Get value
+        y = (y - 45) / 20; // Normalize around 45, with a 20-degree range
+        
+        // Clamp values just in case
+        y = Math.max(-1, Math.min(1, y));
+
+        // Update the target vector.
+        // Note: We'll reverse 'y' like we did with the mouse.
+        targetMouse.x = x;
+        targetMouse.y = -y;
+    }
+    
+    // Mouse move handler (for desktops or as fallback)
     function onDocumentMouseMove(event) {
         // Normalized device coordinates (-1 to +1)
         targetMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         targetMouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     }
+    // --- End of Motion Control Logic ---
+
 
     // Animation loop
     function animate() {
@@ -79,7 +150,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!renderer) return; // Stop animation if renderer isn't set up
 
         // Add camera interaction
-        // Smoothly interpolate camera position towards mouse target
+        // This code doesn't care if targetMouse is from gyro or mouse!
+        // It smoothly interpolates camera position towards the target
         camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetMouse.x * 2, 0.05);
         camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetMouse.y * 2, 0.05);
         // Always look at the center
@@ -113,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
-    // --- NEW MODAL LOGIC (Replaces Game Logic) ---
+    // --- MODAL LOGIC ---
 
     // Get modal elements
     const imageModal = document.getElementById('image-modal');
@@ -197,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- NEW Activities Dropdown Logic ---
+    // --- Activities Dropdown Logic ---
     
     // Desktop
     const navActivitiesLink = document.getElementById('nav-activities-link');
@@ -229,16 +301,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Close dropdowns if clicking outside
     window.addEventListener('click', (e) => {
-        if (navActivitiesLink && !navActivitiesLink.contains(e.target) && navActivitiesDropdown && !navActivitiesDropdown.contains(e.target)) {
-            navActivitiesDropdown.classList.add('hidden');
-            navActivitiesArrow.classList.remove('rotate-180');
+        // Check for desktop nav
+        const navContainer = document.getElementById('activities-nav-container');
+        if (navContainer && !navContainer.contains(e.target)) {
+            if(navActivitiesDropdown) navActivitiesDropdown.classList.add('hidden');
+            if(navActivitiesArrow) navActivitiesArrow.classList.remove('rotate-180');
         }
-        // No need for mobile, as the whole menu closes
     });
 
     // Close mobile menu when a link *inside* it is clicked
     if (mobileMenu) {
-        mobileMenu.querySelectorAll('a').forEach(link => {
+        mobileMenu.querySelectorAll('a.nav-link-mobile, a.dropdown-link-mobile').forEach(link => {
             link.addEventListener('click', () => { 
                 if (!mobileMenu || !menuIconOpen || !menuIconClose) return;
                 mobileMenu.classList.add('hidden');
