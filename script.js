@@ -218,10 +218,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const rect = tagline.getBoundingClientRect();
-        // Get chaser dimensions. Using 40 as a fallback from CSS.
-        const chaserWidth = chaserContainer.offsetWidth || 40;
+        // Get chaser dimensions. Using 48 as a fallback from CSS.
+        const chaserWidth = chaserContainer.offsetWidth || 48;
         
-        // --- THIS IS THE ONLY CHANGE ---
         // "3 lines" (32px) + "3 more spaces" (32px) = 64px
         const space = 64; 
         
