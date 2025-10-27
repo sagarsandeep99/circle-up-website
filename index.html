@@ -5,32 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Circle Up</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter (body) & Pacifico (logo) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Pacifico&display=swap"
         rel="stylesheet">
-    <!-- three.js Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body class="bg-[#0f0f1a] text-white font-['Inter'] overflow-x-hidden">
 
-    <!-- 3D Background Canvas -->
     <canvas id="bg-canvas" class="fixed top-0 left-0 w-full h-full -z-10"></canvas>
 
-    <!-- NEW: 2D Chaser Figure (Smiley) -->
-    <!-- This floats ON TOP of all content (z-30) -->
     <div id="chaser-container" class="fixed top-1/2 left-1/2 z-30" style="visibility: hidden;">
-        <!-- Text Bubble -->
         <div id="chaser-text" class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2">
             Catch me!
         </div>
-        <!-- Smiley SVG -->
         <svg id="chaser-smiley" xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 cursor-pointer"
             viewBox="0 0 100 100">
             <circle cx="50" cy="50" r="48" fill="#FFFF00" stroke="#000000" stroke-width="4" />
@@ -41,19 +32,14 @@
     </div>
 
 
-    <!-- Header Navigation (z-20) -->
     <header class="fixed top-0 left-0 w-full z-20">
-        <!-- ... existing header code ... -->
         <nav
             class="container mx-auto max-w-6xl px-4 py-3 flex justify-between items-center bg-gray-900/30 backdrop-blur-lg rounded-b-xl shadow-lg md:mt-4">
-            <!-- Logo -->
             <a href="#" class="font-['Pacifico'] text-3xl text-white">Circle Up</a>
 
-            <!-- Desktop Nav -->
             <div class="hidden md:flex items-center space-x-6">
                 <a href="#about" class="nav-link">About Us</a>
 
-                <!-- Desktop Activities Dropdown -->
                 <div class="relative" id="activities-nav-container">
                     <a href="#" id="nav-activities-link" class="nav-link flex items-center space-x-1">
                         <span>Activities</span>
@@ -64,7 +50,6 @@
                                 clip-rule="evenodd" />
                         </svg>
                     </a>
-                    <!-- Dropdown Menu -->
                     <div id="nav-activities-dropdown"
                         class="hidden absolute top-full left-0 mt-2 w-48 bg-gray-800/80 backdrop-blur-lg rounded-lg shadow-xl overflow-hidden">
                         <a href="#charades-card" class="dropdown-link">Dumb Charades</a>
@@ -76,14 +61,11 @@
                 <a href="#contact" class="nav-link">Contact Us</a>
             </div>
 
-            <!-- Mobile Menu Button -->
             <button id="menu-btn" class="md:hidden z-30">
-                <!-- Hamburger Icon -->
                 <svg id="menu-icon-open" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white block" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
                 </svg>
-                <!-- Close Icon -->
                 <svg id="menu-icon-close" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white hidden"
                     fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -92,13 +74,11 @@
         </nav>
     </header>
 
-    <!-- Mobile Menu (z-10) -->
     <div id="mobile-menu"
         class="hidden md:hidden fixed top-0 left-0 w-full h-screen bg-gray-900/90 backdrop-blur-xl z-10 pt-24">
         <div class="container mx-auto max-w-6xl px-8 flex flex-col space-y-4 text-center">
             <a href="#about" class="nav-link-mobile">About Us</a>
 
-            <!-- Mobile Activities Dropdown -->
             <div class="relative">
                 <a href="#" id="mobile-nav-activities-link"
                     class="nav-link-mobile flex items-center justify-center space-x-1">
@@ -110,7 +90,6 @@
                             clip-rule="evenodd" />
                     </svg>
                 </a>
-                <!-- Dropdown Menu -->
                 <div id="mobile-nav-activities-dropdown" class="hidden mt-2 w-full rounded-lg shadow-xl overflow-hidden">
                     <a href="#charades-card" class="dropdown-link-mobile">Dumb Charades</a>
                     <a href="#pictionary-card" class="dropdown-link-mobile">Pictionary</a>
@@ -123,11 +102,10 @@
     </div>
 
 
-    <!-- Main Content (z-10) -->
-    <main class="relative z-10 container mx-auto max-w-3xl px-6 pt-32 md:pt-48 pb-24">
+    <main
+        class="relative z-10 container mx-auto max-w-3xl px-6 pb-24 min-h-screen flex flex-col justify-center md:justify-start md:pt-48">
         <div class="flex flex-col items-center text-center space-y-12">
 
-            <!-- Hero Section -->
             <section class="flex flex-col items-center text-center">
                 <h1 class="font-['Pacifico'] text-7xl md:text-8xl text-white mb-2"
                     style="text-shadow: 0 0 15px rgba(255,255,255,0.3);">
@@ -136,10 +114,9 @@
                 <p class="text-2xl md:text-3xl text-gray-300">C U Around</p>
             </section>
 
-            <!-- About Us Section -->
-            <section id="about" class="glass-card w-full text-center">
+            <section id="about"
+                class="glass-card w-full text-center opacity-0 translate-y-10 transition-all duration-700 ease-out">
                 <h2 class="text-3xl font-bold mb-6">About Us</h2>
-                <!-- Updated paragraph structure -->
                 <div class="text-lg md:text-xl text-gray-200 space-y-4">
                     <p>
                         At Circle Up, strangers don’t stay strangers for long. We host cozy hangouts where real talks,
@@ -155,23 +132,19 @@
                 </div>
             </section>
 
-            <!-- Activities Section -->
             <section id="activities" class="w-full">
                 <h2 class="text-3xl font-bold mb-6 text-center">Tonight's Games</h2>
                 <div id="activities-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Card 1: Dumb Charades -->
                     <div id="charades-card"
                         class="activity-card border-cyan-400/50 hover:border-cyan-300 text-cyan-300">
                         <h3 class="text-3xl font-bold">Dumb Charades</h3>
                     </div>
 
-                    <!-- Card 2: Pictionary -->
                     <div id="pictionary-card"
                         class="activity-card border-pink-400/50 hover:border-pink-300 text-pink-300">
                         <h3 class="text-3xl font-bold">Pictionary</h3>
                     </div>
 
-                    <!-- Card 3: Karaoke -->
                     <div id="karaoke-card"
                         class="activity-card border-yellow-400/50 hover:border-yellow-300 text-yellow-300">
                         <h3 class="text-3xl font-bold">Karaoke</h3>
@@ -179,12 +152,10 @@
                 </div>
             </section>
 
-            <!-- Contact Us Section -->
             <section id="contact" class="glass-card w-full">
                 <h2 class="text-3xl font-bold mb-6">Get In Touch</h2>
                 <div class="flex justify-center items-center space-x-6 md:space-x-8">
-                    <!-- WhatsApp -->
-                    <a href="https://api.whatsapp.com/send?phone=8217678506&text=Knock%20knock!%0AJust%20landed%20at%20Circle%20Up%20HQ.%20Seeking%20partners%20in%20crime%20and%20good%20vibes%20only%20%E2%9C%A8%0AGot%20room%20for%20one%20more%3F"
+                    <a href="httpsm://api.whatsapp.com/send?phone=8217678506&text=Knock%20knock!%0AJust%20landed%20at%20Circle%20Up%20HQ.%20Seeking%20partners%20in%20crime%20and%20good%20vibes%20only%20%E2%9C%A8%0AGot%20room%20for%20one%20more%3F"
                         target="_blank" rel="noopener noreferrer" class="contact-link">
                         <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
                             <path
@@ -192,7 +163,6 @@
                         </svg>
                         <span class="ml-2">WhatsApp</span>
                     </a>
-                    <!-- Instagram -->
                     <a href="https://www.instagram.com/circleup.irl" target="_blank" rel="noopener noreferrer"
                         class="contact-link">
                         <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
@@ -201,7 +171,6 @@
                         </svg>
                         <span class="ml-2">Instagram</span>
                     </a>
-                    <!-- YouTube -->
                     <a href="https://www.youtube.com/@circleupirl" target="_blank" rel="noopener noreferrer"
                         class="contact-link">
                         <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
@@ -216,14 +185,11 @@
         </div>
     </main>
 
-    <!-- Image Modal (z-40) -->
     <div id="image-modal"
         class="hidden fixed top-0 left-0 w-full h-full bg-black/80 backdrop-blur-sm z-40 flex items-center justify-center p-6">
         <div class="bg-gray-800 p-6 rounded-2xl shadow-xl max-w-2xl w-full relative">
-            <!-- Close Button -->
             <button id="close-image-modal"
                 class="absolute -top-3 -right-3 bg-red-600 text-white rounded-full h-10 w-10 flex items-center justify-center text-2xl font-bold">&times;</button>
-            <!-- Modal Content -->
             <h2 id="modal-title" class="text-3xl font-bold mb-4 text-center">Modal Title</h2>
             <div class="aspect-video w-full rounded-lg overflow-hidden bg-gray-900">
                 <img id="modal-image" src="" alt="Activity Image" class="w-full h-full object-cover">
@@ -232,7 +198,6 @@
     </div>
 
 
-    <!-- Main JavaScript File -->
     <script src="script.js"></script>
 
 </body>

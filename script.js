@@ -370,6 +370,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    
+    // --- Scroll-In Animation Logic ---
+    const aboutSection = document.getElementById('about');
+
+    if (aboutSection) {
+        const observerOptions = {
+            root: null, // Use the viewport as the root
+            rootMargin: '0px',
+            threshold: 0.1 // Trigger when 10% of the element is visible
+        };
+
+        const aboutObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Element is now visible, apply animation classes
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    
+                    // Stop observing this element since the animation is done
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Start observing the "About Us" section
+        aboutObserver.observe(aboutSection);
+    }
+
 
     // --- Start Everything ---
     if (typeof THREE !== 'undefined') {
