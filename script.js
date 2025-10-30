@@ -107,13 +107,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const geometries = [
             new THREE.IcosahedronGeometry(0.5, 0),      // Diamond
             new THREE.SphereGeometry(0.4, 16, 16),      // Ball
-            new THREE.BoxGeometry(0.8, 0.8, 0.8),       // Cube
-            new THREE.TetrahedronGeometry(0.7),         // Triangle
             new THREE.TorusGeometry(0.4, 0.15, 16, 40) // Donut
         ];
         const material = new THREE.MeshNormalMaterial();
 
-        for (let i = 0; i < 100; i++) { // Set to 100 shapes total
+        for (let i = 0; i < 80; i++) { // Set to 100 shapes total
             const geometry = geometries[Math.floor(Math.random() * geometries.length)];
             const mesh = new THREE.Mesh(geometry, material);
 
