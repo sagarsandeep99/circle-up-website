@@ -2,7 +2,7 @@
 */
 body {
     /* Dark violet and black gradient */
-    background: linear-gradient(to top right, #000000, #2c0452); /* Black to Dark Violet */
+    background: radial-gradient(circle, #000000, #18022c); /* Black to Dark Violet */
     background-attachment: fixed;
     font-family: 'Inter', sans-serif;
 }
@@ -106,9 +106,7 @@ body {
 */
 
 .light-theme {
-    /* Plain pastel gradient based on the site's color palette */
-    /* We'll use the pastel pink, yellow, and cyan from your activity cards */
-    background: linear-gradient(to top right, #fbcfe8, #fef3c7, #a7f3d0) !important; 
+    background: radial-gradient(circle, #fbcfe8, #fef3c7, #a7f3d0, #fbcfe8);
     background-attachment: fixed; 
     color: #1a202c !important;
 }
