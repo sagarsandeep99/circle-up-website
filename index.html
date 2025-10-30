@@ -22,75 +22,66 @@
         <div id="chaser-text" class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2">
             Catch me!
         </div>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" id="chaser-smiley" class="cursor-pointer" aria-label="Bubbly wink smiley">
-          <defs>
-            <radialGradient id="faceGrad" cx="35%" cy="30%" r="75%">
-              <stop offset="0%" stop-color="#fff7e6" />
-              <stop offset="45%" stop-color="#ffb874" />
-              <stop offset="100%" stop-color="#ff7b2d" />
-            </radialGradient>
-        
-            <linearGradient id="shine" x1="0" x2="1" y1="0" y2="1">
-              <stop offset="0" stop-color="#ffffff" stop-opacity="0.85"/>
-              <stop offset="1" stop-color="#ffffff" stop-opacity="0.05"/>
-            </linearGradient>
-        
-            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur"/>
-              <feColorMatrix in="blur" type="matrix"
-                values="0 0 0 0 1
+
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" id="chaser-smiley" class="cursor-pointer"
+            aria-label="Bubbly wink smiley">
+            <defs>
+                <radialGradient id="faceGrad" cx="35%" cy="30%" r="75%">
+                    <stop offset="0%" stop-color="#fff7e6" />
+                    <stop offset="45%" stop-color="#ffb874" />
+                    <stop offset="100%" stop-color="#ff7b2d" />
+                </radialGradient>
+
+                <linearGradient id="shine" x1="0" x2="1" y1="0" y2="1">
+                    <stop offset="0" stop-color="#ffffff" stop-opacity="0.85" />
+                    <stop offset="1" stop-color="#ffffff" stop-opacity="0.05" />
+                </linearGradient>
+
+                <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
+                    <feColorMatrix in="blur" type="matrix" values="0 0 0 0 1
                         0 0 0 0 0.5
                         0 0 0 0 0.15
-                        0 0 0 0.8 0" result="glowColor"/>
-              <feMerge>
-                <feMergeNode in="glowColor"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
-          </defs>
-        
-          <g id="smiley" transform="translate(100,100)">
-            <animateTransform attributeName="transform"
-                              type="translate"
-                              values="100,95;100,105;100,95"
-                              dur="4s"
-                              repeatCount="indefinite" />
-        
-            <circle cx="0" cy="0" r="54" fill="#ff9a4a" opacity="0.9" filter="url(#glow)" />
-            <circle cx="0" cy="0" r="48" fill="url(#faceGrad)" />
-        
-            <ellipse cx="-18" cy="-20" rx="18" ry="10" fill="url(#shine)" opacity="0.7">
-              <animate attributeName="opacity" values="0.7;0.55;0.7" dur="4s" repeatCount="indefinite"/>
-            </ellipse>
-        
-            <g transform="translate(0,12)">
-              <path d="M -22 4 Q 0 26 22 4" fill="none" stroke="#2b1b00" stroke-width="4" stroke-linecap="round" />
-              <animateTransform attributeName="transform"
-                                type="translate"
-                                values="0,12;0,14;0,12"
-                                dur="4s"
-                                repeatCount="indefinite"/>
+                        0 0 0 0.8 0" result="glowColor" />
+                    <feMerge>
+                        <feMergeNode in="glowColor" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+
+            <g id="smiley" transform="translate(100,100)">
+                <animateTransform attributeName="transform" type="translate" values="100,95;100,105;100,95" dur="4s"
+                    repeatCount="indefinite" />
+
+                <circle cx="0" cy="0" r="54" fill="#ff9a4a" opacity="0.9" filter="url(#glow)" />
+                <circle cx="0" cy="0" r="48" fill="url(#faceGrad)" />
+
+                <ellipse cx="-18" cy="-20" rx="18" ry="10" fill="url(#shine)" opacity="0.7">
+                    <animate attributeName="opacity" values="0.7;0.55;0.7" dur="4s" repeatCount="indefinite" />
+                </ellipse>
+
+                <g transform="translate(0,12)">
+                    <path d="M -22 4 Q 0 26 22 4" fill="none" stroke="#2b1b00" stroke-width="4"
+                        stroke-linecap="round" />
+                    <animateTransform attributeName="transform" type="translate" values="0,12;0,14;0,12" dur="4s"
+                        repeatCount="indefinite" />
+                </g>
+
+                <ellipse cx="-15" cy="-4" rx="6" ry="6" fill="#2b1b00" />
+
+                <ellipse id="eye-right" cx="15" cy="-4" rx="6" ry="6" fill="#2b1b00">
+                    <animate attributeName="ry" dur="0.3s" values="6;1;6" keyTimes="0;0.5;1" begin="0s;5s;10s;15s;20s"
+                        repeatCount="indefinite" />
+                </ellipse>
+
+                <ellipse cx="-26" cy="6" rx="8" ry="5" fill="#ff954d" opacity="0.65">
+                    <animate attributeName="opacity" values="0.65;0.5;0.65" dur="4s" repeatCount="indefinite" />
+                </ellipse>
+                <ellipse cx="26" cy="6" rx="8" ry="5" fill="#ff954d" opacity="0.65">
+                    <animate attributeName="opacity" values="0.65;0.5;0.65" dur="4s" repeatCount="indefinite" />
+                </ellipse>
             </g>
-        
-            <ellipse cx="-15" cy="-4" rx="6" ry="6" fill="#2b1b00" />
-        
-            <ellipse id="eye-right" cx="15" cy="-4" rx="6" ry="6" fill="#2b1b00">
-              <animate attributeName="ry"
-                       dur="0.3s"
-                       values="6;1;6"
-                       keyTimes="0;0.5;1"
-                       begin="0s;5s;10s;15s;20s"
-                       repeatCount="indefinite"/>
-            </ellipse>
-        
-            <ellipse cx="-26" cy="6" rx="8" ry="5" fill="#ff954d" opacity="0.65">
-              <animate attributeName="opacity" values="0.65;0.5;0.65" dur="4s" repeatCount="indefinite"/>
-            </ellipse>
-            <ellipse cx="26" cy="6" rx="8" ry="5" fill="#ff954d" opacity="0.65">
-              <animate attributeName="opacity" values="0.65;0.5;0.65" dur="4s" repeatCount="indefinite"/>
-            </ellipse>
-          </g>
         </svg>
 
     </div>
@@ -99,7 +90,10 @@
     <header class="fixed top-0 left-0 w-full z-20">
         <nav
             class="container mx-auto max-w-6xl px-4 py-3 flex justify-between items-center bg-gray-900/30 backdrop-blur-lg rounded-b-xl shadow-lg md:mt-4">
-            <a href="#" class="font-['Pacifico'] text-3xl text-white">Circle Up</a>
+            <a href="#" class="flex items-center">
+                <img src="images/logos/logo_1.png" alt="Circle Up Logo" class="h-10 md:h-12 mr-2">
+                <span class="sr-only">Circle Up</span>
+            </a>
 
             <div class="hidden md:flex items-center space-x-6">
                 <a href="#about" class="nav-link">About Us</a>
@@ -107,8 +101,8 @@
                 <div class="relative" id="activities-nav-container">
                     <a href="#" id="nav-activities-link" class="nav-link flex items-center space-x-1">
                         <span>Activities</span>
-                        <svg id="nav-activities-arrow" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform"
-                            viewBox="0 0 20 20" fill="currentColor">
+                        <svg id="nav-activities-arrow" xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5 transition-transform" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd"
                                 d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                                 clip-rule="evenodd" />
@@ -123,8 +117,8 @@
                 </div>
 
                 <a href="#contact" class="nav-link">Contact Us</a>
-                
-                </div>
+
+            </div>
 
             <button id="menu-btn" class="md:hidden z-30">
                 <svg id="menu-icon-open" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white block" fill="none"
@@ -155,7 +149,8 @@
                             clip-rule="evenodd" />
                     </svg>
                 </a>
-                <div id="mobile-nav-activities-dropdown" class="hidden mt-2 w-full rounded-lg shadow-xl overflow-hidden">
+                <div id="mobile-nav-activities-dropdown"
+                    class="hidden mt-2 w-full rounded-lg shadow-xl overflow-hidden">
                     <a href="#charades-card" class="dropdown-link-mobile">Dumb Charades</a>
                     <a href="#pictionary-card" class="dropdown-link-mobile">Pictionary</a>
                     <a href="#karaoke-card" class="dropdown-link-mobile">Karaoke</a>
@@ -163,8 +158,8 @@
             </div>
 
             <a href="#contact" class="nav-link-mobile">Contact Us</a>
-            
-            </div>
+
+        </div>
     </div>
 
 
@@ -180,7 +175,7 @@
                     <p id="tagline" class="text-2xl md:text-3xl text-gray-300">C U Around</p>
                 </div>
             </section>
-            
+
             <section id="about" class="glass-card w-full text-center scroll-mt-28">
                 <h2 class="text-3xl font-bold mb-6">About Us</h2>
                 <div class="text-lg md:text-xl text-gray-200 space-y-4">
@@ -229,17 +224,17 @@
                         </svg>
                         <span class="ml-2">WhatsApp</span>
                     </a>
-                    
+
                     <a href="https://www.instagram.com/circleup.irl" target="_blank" rel="noopener noreferrer"
                         class="contact-link">
                         <svg class="h-8 w-8" fill="url(#instaGradient)" viewBox="0 0 24 24">
                             <defs>
                                 <radialGradient id="instaGradient" r="150%" cx="30%" cy="107%">
-                                <stop stop-color="#fdf497" offset="0" />
-                                <stop stop-color="#fdf497" offset="0.05" />
-                                <stop stop-color="#fd5949" offset="0.45" />
-                                <stop stop-color="#d6249f" offset="0.6" />
-                                <stop stop-color="#285AEB" offset="0.9" />
+                                    <stop stop-color="#fdf497" offset="0" />
+                                    <stop stop-color="#fdf497" offset="0.05" />
+                                    <stop stop-color="#fd5949" offset="0.45" />
+                                    <stop stop-color="#d6249f" offset="0.6" />
+                                    <stop stop-color="#285AEB" offset="0.9" />
                                 </radialGradient>
                             </defs>
                             <path
@@ -276,7 +271,7 @@
 
 
     <div id="fab-container" class="fixed bottom-6 right-6 z-30 flex flex-col space-y-4">
-        
+
         <a href="https://api.whatsapp.com/send?phone=8217678506&text=Knock%20knock!%0AJust%20landed%20at%20Circle%20Up%20HQ.%20Seeking%20partners%20in%20crime%20and%20good%20vibes%20only%20%E2%9C%A8%0AGot%20room%20for%20one%20more%3F"
             target="_blank" rel="noopener noreferrer" class="fab-button" aria-label="Contact on WhatsApp">
             <svg class="h-7 w-7" fill="#25D366" viewBox="0 0 24 24">
@@ -286,11 +281,15 @@
         </a>
 
         <button id="theme-toggle-btn-desktop" class="fab-button text-gray-300" aria-label="Toggle theme">
-            <svg id="theme-icon-sun-desktop" class="h-7 w-7 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            <svg id="theme-icon-sun-desktop" class="h-7 w-7 hidden" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
-            <svg id="theme-icon-moon-desktop" class="h-7 w-7 block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            <svg id="theme-icon-moon-desktop" class="h-7 w-7 block" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
             </svg>
         </button>
 
