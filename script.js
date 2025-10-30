@@ -3,6 +3,63 @@
 // (like the canvas and buttons) exist before we try to use them.
 document.addEventListener('DOMContentLoaded', () => {
 
+    // START: New Theme Toggle Logic
+    const themeToggleBtnDesktop = document.getElementById('theme-toggle-btn-desktop');
+    const themeToggleBtnMobile = document.getElementById('theme-toggle-btn-mobile');
+
+    // Get all icons
+    const sunIcons = [
+        document.getElementById('theme-icon-sun-desktop'),
+        document.getElementById('theme-icon-sun-mobile')
+    ].filter(Boolean); // Filter out nulls if one element doesn't exist
+
+    const moonIcons = [
+        document.getElementById('theme-icon-moon-desktop'),
+        document.getElementById('theme-icon-moon-mobile')
+    ].filter(Boolean);
+
+    const enableLightMode = () => {
+        document.body.classList.add('light-theme');
+        localStorage.setItem('theme', 'light');
+        sunIcons.forEach(icon => icon.classList.add('hidden')); // HIDE Sun
+        moonIcons.forEach(icon => icon.classList.remove('hidden')); // SHOW Moon
+    };
+
+    const enableDarkMode = () => {
+        document.body.classList.remove('light-theme');
+        localStorage.setItem('theme', 'dark');
+        sunIcons.forEach(icon => icon.classList.remove('hidden')); // SHOW Sun
+        moonIcons.forEach(icon => icon.classList.add('hidden')); // HIDE Moon
+    };
+
+    const toggleTheme = (e) => {
+        // Prevent default if it's an anchor tag (like the mobile button)
+        if (e && e.preventDefault) e.preventDefault();
+
+        if (document.body.classList.contains('light-theme')) {
+            enableDarkMode();
+        } else {
+            enableLightMode();
+        }
+    };
+
+    // Add Listeners
+    if (themeToggleBtnDesktop) {
+        themeToggleBtnDesktop.addEventListener('click', toggleTheme);
+    }
+    if (themeToggleBtnMobile) {
+        themeToggleBtnMobile.addEventListener('click', toggleTheme);
+    }
+
+    // Check for saved theme on page load
+    if (localStorage.getItem('theme') === 'light') {
+        enableLightMode();
+    } else {
+        enableDarkMode(); // Default
+    }
+    // END: New Theme Toggle Logic
+
+
     // --- 3D Background Setup ---
     // 'THREE' is available globally from the script tag in the <head>
     let scene, camera, renderer, shapes;
@@ -52,14 +109,14 @@ document.addEventListener('DOMContentLoaded', () => {
             new THREE.SphereGeometry(0.4, 16, 16),      // Ball
             new THREE.BoxGeometry(0.8, 0.8, 0.8),       // Cube
             new THREE.TetrahedronGeometry(0.7),         // Triangle
-            new THREE.TorusGeometry( 0.4, 0.15, 16, 40 ) // Donut
+            new THREE.TorusGeometry(0.4, 0.15, 16, 40) // Donut
         ];
-        const material = new THREE.MeshNormalMaterial(); 
+        const material = new THREE.MeshNormalMaterial();
 
         for (let i = 0; i < 100; i++) { // Set to 100 shapes total
             const geometry = geometries[Math.floor(Math.random() * geometries.length)];
             const mesh = new THREE.Mesh(geometry, material);
-            
+
             // Random positions
             mesh.position.x = (Math.random() - 0.5) * 25;
             mesh.position.y = (Math.random() - 0.5) * 25;
@@ -78,10 +135,10 @@ document.addEventListener('DOMContentLoaded', () => {
             shapes.push(mesh);
             scene.add(mesh);
         }
-        
+
         // --- Event Listeners ---
         window.addEventListener('resize', onWindowResize, false);
-        
+
         // Mouse listener (fallback for desktops)
         document.addEventListener('mousemove', onDocumentMouseMove, false);
 
@@ -92,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const onSmileyFirstClick = () => {
                 moveChaser();
                 tauntUser();
-                
+
                 // Stop repositioning it next to the tagline on resize
                 window.removeEventListener('resize', positionChaserInitially);
 
@@ -105,17 +162,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Add the "first click" listener, which runs only once
             chaserSmiley.addEventListener('click', onSmileyFirstClick, { once: true });
-            
+
             // Position it for the first time
-            positionChaserInitially(); 
-            
+            positionChaserInitially();
+
             // Add a resize listener to keep it in place (until it's clicked)
             window.addEventListener('resize', positionChaserInitially);
 
             // Make it visible once JS is loaded and positioned
             chaserContainer.style.visibility = 'visible';
         }
-        
+
         // Attempt motion controls on first interaction
         document.body.addEventListener('click', attemptMotionControl, { once: true });
         document.body.addEventListener('touchstart', attemptMotionControl, { once: true });
@@ -124,13 +181,13 @@ document.addEventListener('DOMContentLoaded', () => {
         animate();
     }
 
-    
+
     // --- Motion Control Logic ---
 
     function attemptMotionControl() {
         // Check if the API is available
         if (window.DeviceOrientationEvent) {
-            
+
             // iOS 13+ permission request
             if (typeof DeviceOrientationEvent.requestPermission === 'function') {
                 DeviceOrientationEvent.requestPermission()
@@ -154,9 +211,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handles device tilt
     function onDeviceOrientation(event) {
         // event.gamma: left-to-right tilt (-90 to 90)
-        let x = (event.gamma || 0); 
+        let x = (event.gamma || 0);
         x = Math.max(-90, Math.min(90, x)) / 90; // Clamp and normalize
-        
+
         // event.beta: front-to-back tilt (-180 to 180)
         let y = (event.beta || 45); // Use 45 as center
         y = (y - 45) / 20; // Normalize around 45, with a 20-degree range
@@ -166,13 +223,13 @@ document.addEventListener('DOMContentLoaded', () => {
         targetMouse.x = x;
         targetMouse.y = -y; // Invert Y
     }
-    
+
     // Mouse move handler (for desktops or as fallback)
     function onDocumentMouseMove(event) {
         targetMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         targetMouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     }
-    
+
     // --- 2D Chaser Game Logic ---
 
     function moveChaser() {
@@ -187,17 +244,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const elHeight = chaserContainer.offsetHeight;
 
         // Calculate a random position, padding from the edges
-        const padding = 50; 
+        const padding = 50;
         const newLeft = Math.random() * (vw - elWidth - (padding * 2)) + padding;
         const newTop = Math.random() * (vh - elHeight - (padding * 2)) + padding;
-        
+
         chaserContainer.style.left = `${newLeft}px`;
         chaserContainer.style.top = `${newTop}px`;
     }
 
     function tauntUser() {
         if (!chaserTextElement) return;
-        
+
         // Ensure the next taunt isn't the same as the last one
         let newIndex;
         do {
@@ -220,15 +277,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const rect = tagline.getBoundingClientRect();
         // Get chaser dimensions. Using 48 as a fallback from CSS.
         const chaserWidth = chaserContainer.offsetWidth || 48;
-        
+
         // "3 lines" (32px) + "3 more spaces" (32px) = 64px
-        const space = 64; 
-        
+        const space = 64;
+
         // Top: Positioned below the tagline + space
         const newTop = rect.bottom + space;
-        
+
         // Left: Centered horizontally with the tagline
-        const newLeft = rect.left + (rect.width / 2) - (chaserWidth / 2); 
+        const newLeft = rect.left + (rect.width / 2) - (chaserWidth / 2);
 
         chaserContainer.style.top = `${newTop}px`;
         chaserContainer.style.left = `${newLeft}px`;
@@ -239,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function animate() {
         requestAnimationFrame(animate);
-        if (!renderer) return; 
+        if (!renderer) return;
 
         // Camera interaction (gyro or mouse)
         camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetMouse.x * 2, 0.05);
@@ -267,10 +324,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const bob = Math.sin(Date.now() * 0.005) * 5; // 5px up and down
             chaserContainer.style.transform = `translateY(${bob}px)`;
         } else if (chaserContainer && !chaserContainer.style.transform) {
-             // Start the bobbing animation
-             chaserContainer.style.transform = `translateY(0px)`;
+            // Start the bobbing animation
+            chaserContainer.style.transform = `translateY(0px)`;
         }
-        
+
         renderer.render(scene, camera);
     }
 
@@ -293,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Get card elements
     const charadesCard = document.getElementById('charades-card');
     const pictionaryCard = document.getElementById('pictionary-card');
-    const karaokeCard = document.getElementById('karaoke-card'); 
+    const karaokeCard = document.getElementById('karaoke-card');
 
     // Function to open the image modal
     function openImageModal(title, imageUrl, colorClass) {
@@ -312,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Event Listeners for Cards ---
-    
+
     const placeholderUrl = (text, color) => `https://placehold.co/600x400/${color}/white?text=${text}`;
 
     if (charadesCard) {
@@ -336,7 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeImageModalBtn) {
         closeImageModalBtn.addEventListener('click', closeImageModal);
     }
-    
+
     if (imageModal) {
         imageModal.addEventListener('click', (e) => {
             // Close if clicking on the background overlay
@@ -364,7 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Activities Dropdown Logic ---
-    
+
     // Desktop
     const navActivitiesLink = document.getElementById('nav-activities-link');
     const navActivitiesDropdown = document.getElementById('nav-activities-dropdown');
@@ -398,25 +455,25 @@ document.addEventListener('DOMContentLoaded', () => {
         // Check for desktop nav
         const navContainer = document.getElementById('activities-nav-container');
         if (navContainer && !navContainer.contains(e.target)) {
-            if(navActivitiesDropdown) navActivitiesDropdown.classList.add('hidden');
-            if(navActivitiesArrow) navActivitiesArrow.classList.remove('rotate-180');
+            if (navActivitiesDropdown) navActivitiesDropdown.classList.add('hidden');
+            if (navActivitiesArrow) navActivitiesArrow.classList.remove('rotate-180');
         }
     });
 
     // Close mobile menu when a link *inside* it is clicked
     if (mobileMenu) {
         mobileMenu.querySelectorAll('a.nav-link-mobile, a.dropdown-link-mobile').forEach(link => {
-            link.addEventListener('click', () => { 
+            link.addEventListener('click', () => {
                 if (!mobileMenu || !menuIconOpen || !menuIconClose) return;
                 mobileMenu.classList.add('hidden');
                 menuIconOpen.classList.add('block');
                 menuIconOpen.classList.remove('hidden');
                 menuIconClose.classList.add('hidden');
                 menuIconClose.classList.remove('block');
-                
+
                 // Also close the mobile activities dropdown if it was open
-                if(mobileNavActivitiesDropdown) mobileNavActivitiesDropdown.classList.add('hidden');
-                if(mobileNavActivitiesArrow) mobileNavActivitiesArrow.classList.remove('rotate-180');
+                if (mobileNavActivitiesDropdown) mobileNavActivitiesDropdown.classList.add('hidden');
+                if (mobileNavActivitiesArrow) mobileNavActivitiesArrow.classList.remove('rotate-180');
             });
         });
     }

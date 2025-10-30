@@ -1,8 +1,9 @@
 /* Custom styles for Circle Up
 */
 body {
-    /* Set the 3D canvas to be in the background */
-    background-color: #0f0f1a;
+    /* Dark violet and black gradient */
+    background: linear-gradient(to top right, #000000, #2c0452); /* Black to Dark Violet */
+    background-attachment: fixed;
     font-family: 'Inter', sans-serif;
 }
 
@@ -38,17 +39,12 @@ body {
 
 /* --- Activity Card Styles --- */
 .activity-card {
-    @apply bg-gray-900/30 backdrop-blur-lg rounded-2xl shadow-lg
-    p-8 h-48 flex items-center justify-center 
-    border-2 border-transparent 
-    transition-all duration-300 ease-in-out 
-    cursor-pointer transform hover:scale-105 hover:shadow-2xl;
+    @apply bg-gray-900/30 backdrop-blur-lg rounded-2xl shadow-lg p-8 h-48 flex items-center justify-center border-2 border-transparent transition-all duration-300 ease-in-out cursor-pointer transform hover:scale-105 hover:shadow-2xl;
 }
 
 /* --- Contact Link Styles --- */
 .contact-link {
-    @apply flex items-center text-gray-300 hover:text-white hover:scale-110
-    transition-all duration-200 ease-in-out text-lg;
+    @apply flex items-center text-gray-300 hover:text-white hover:scale-110 transition-all duration-200 ease-in-out text-lg;
 }
 
 /* --- 2D CHASER SMILEY --- */
@@ -73,10 +69,11 @@ body {
 
 #chaser-text {
     position: absolute;
-    bottom: 110%; /* Position above the smiley */
+    bottom: 110%;
+    /* Position above the smiley */
     left: 50%;
     transform: translateX(-50%);
-    
+
     /* Style */
     background-color: white;
     color: #111;
@@ -84,8 +81,8 @@ body {
     border-radius: 14px;
     font-size: 14px;
     font-weight: 600;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+
     /* This is the fix for the text wrapping */
     white-space: nowrap;
 }
@@ -101,3 +98,220 @@ body {
     border-style: solid;
     border-color: white transparent transparent transparent;
 }
+
+
+/* ==========================================================================
+   START: New Light Theme Overrides
+==========================================================================
+*/
+
+.light-theme {
+    /* Plain pastel gradient based on the site's color palette */
+    /* We'll use the pastel pink, yellow, and cyan from your activity cards */
+    background: linear-gradient(to top right, #fbcfe8, #fef3c7, #a7f3d0) !important; 
+    background-attachment: fixed; 
+    color: #1a202c !important;
+}
+
+/* --- General Text --- */
+/* We need to override the specific text colors from Tailwind */
+.light-theme .text-white {
+    color: #1a202c !important;
+}
+
+.light-theme .text-gray-200 {
+    color: #4a5568 !important;
+}
+
+.light-theme .text-gray-300 {
+    color: #2d3748 !important;
+}
+
+/* --- Logo & Tagline --- */
+.light-theme .font-\[\'Pacifico\'\].text-white {
+    color: #2d3748 !important;
+}
+
+.light-theme h1.text-white {
+    text-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.light-theme #tagline.text-gray-300 {
+    color: #4a5568 !important;
+}
+
+/* --- Header / Nav --- */
+/* We escape the '/' in the class name with '\/' */
+.light-theme nav.bg-gray-900\/30 {
+    background-color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.light-theme #theme-toggle-btn-desktop.text-gray-300 {
+    color: #4a5568 !important;
+}
+
+.light-theme #theme-toggle-btn-desktop.hover\:text-white:hover {
+    color: #000000 !important;
+}
+
+
+/* --- Custom Classes from style.css --- */
+.light-theme .glass-card {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+.light-theme .nav-link {
+    @apply text-gray-700 hover:text-black;
+}
+
+.light-theme .nav-link-mobile {
+    @apply text-gray-700 hover:text-black text-2xl font-medium;
+}
+
+.light-theme .dropdown-link {
+    @apply text-gray-700 hover:bg-gray-200/50 hover:text-black;
+}
+
+.light-theme .dropdown-link-mobile {
+    @apply text-gray-700 bg-gray-200/30 hover:bg-gray-200/50 hover:text-black;
+}
+
+/* Override the dropdown container bg */
+.light-theme #nav-activities-dropdown {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* --- Activity Cards --- */
+.light-theme .activity-card {
+    @apply bg-white/30;
+}
+
+/* Specific activity card text/border colors */
+.light-theme #charades-card {
+    @apply border-cyan-500/50 hover:border-cyan-500 text-cyan-600;
+}
+
+.light-theme #pictionary-card {
+    @apply border-pink-500/50 hover:border-pink-500 text-pink-600;
+}
+
+.light-theme #karaoke-card {
+    @apply border-yellow-500/50 hover:border-yellow-500 text-yellow-600;
+}
+
+
+.light-theme .contact-link {
+    @apply text-gray-700 hover:text-black;
+}
+
+/* --- Mobile Menu --- */
+.light-theme #mobile-menu {
+    background-color: rgba(240, 242, 245, 0.95) !important;
+}
+
+.light-theme #mobile-nav-activities-dropdown {
+    background-color: transparent !important;
+}
+
+/* --- Modal --- */
+.light-theme #image-modal .bg-gray-800 {
+    background-color: #ffffff !important;
+}
+
+.light-theme #image-modal #modal-title.text-cyan-300 {
+    color: #0e7490 !important;
+}
+
+.light-theme #image-modal #modal-title.text-pink-300 {
+    color: #be185d !important;
+}
+
+.light-theme #image-modal #modal-title.text-yellow-300 {
+    color: #ca8a04 !important;
+}
+
+.light-theme #image-modal .bg-gray-900 {
+    background-color: #e5e7eb !important;
+}
+
+/* --- Chaser Smiley Text --- */
+.light-theme #chaser-text {
+    background-color: #2d3748;
+    color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.light-theme #chaser-text::after {
+    border-color: #2d3748 transparent transparent transparent;
+}
+
+/* ==========================================================================
+   END: New Light Theme Overrides
+==========================================================================
+*/
+
+
+/* ==========================================================================
+   START: New Floating Action Button (FAB) Styles
+==========================================================================
+*/
+.fab-button {
+    width: 56px;
+    height: 56px;
+
+    /* Re-use glass-card style */
+    background: rgba(26, 26, 40, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+
+    border-radius: 50%;
+    /* Make it circular */
+
+    /* Center icon */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: all 0.2s ease-in-out;
+}
+
+.fab-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Theme toggle icon color (dark mode) */
+.fab-button#theme-toggle-btn-desktop svg {
+    color: #e5e7eb;
+    /* text-gray-200 */
+}
+
+/* --- Light Theme FAB Overrides --- */
+
+.light-theme .fab-button {
+    /* Re-use light glass-card style */
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+.light-theme .fab-button:hover {
+    box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.2);
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Theme toggle icon color (light mode) */
+.light-theme .fab-button#theme-toggle-btn-desktop svg {
+    color: #374151;
+    /* text-gray-700 */
+}
+
+/* ==========================================================================
+   END: New Floating Action Button (FAB) Styles
+==========================================================================
+*/
