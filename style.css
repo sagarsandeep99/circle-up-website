@@ -1,5 +1,12 @@
 /* Custom styles for Circle Up
 */
+
+/* This is new and REQUIRED for the snap-scroll layout */
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
 body {
     /* Dark violet and black gradient */
     background: radial-gradient(circle, #000000, #18022c); /* Black to Dark Violet */
@@ -18,6 +25,20 @@ body {
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 }
 
+/* --- Scroll Fade Animations --- */
+
+/* Hero Card (Slide down/up) */
+#hero-card {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+#hero-card.card-hidden {
+    opacity: 0;
+    transform: translateY(100px); /* Slide down 100px and fade */
+}
+
 /* --- Navigation Links --- */
 .nav-link {
     @apply text-gray-300 hover:text-white transition-colors duration-200;
@@ -25,21 +46,6 @@ body {
 
 .nav-link-mobile {
     @apply text-gray-300 hover:text-white transition-colors duration-200 text-2xl font-medium;
-}
-
-/* --- Dropdown Menu Links --- */
-.dropdown-link {
-    @apply block px-4 py-2 text-sm text-gray-200 hover:bg-gray-700/50 hover:text-white;
-}
-
-.dropdown-link-mobile {
-    @apply block px-4 py-3 text-lg text-gray-300 bg-gray-700/30 hover:bg-gray-700/50 hover:text-white;
-}
-
-
-/* --- Activity Card Styles --- */
-.activity-card {
-    @apply bg-gray-900/30 backdrop-blur-lg rounded-2xl shadow-lg p-8 h-48 flex items-center justify-center border-2 border-transparent transition-all duration-300 ease-in-out cursor-pointer transform hover:scale-105 hover:shadow-2xl;
 }
 
 /* --- Contact Link Styles --- */
@@ -168,38 +174,6 @@ body {
     @apply text-gray-700 hover:text-black text-2xl font-medium;
 }
 
-.light-theme .dropdown-link {
-    @apply text-gray-700 hover:bg-gray-200/50 hover:text-black;
-}
-
-.light-theme .dropdown-link-mobile {
-    @apply text-gray-700 bg-gray-200/30 hover:bg-gray-200/50 hover:text-black;
-}
-
-/* Override the dropdown container bg */
-.light-theme #nav-activities-dropdown {
-    background-color: rgba(255, 255, 255, 0.8) !important;
-}
-
-/* --- Activity Cards --- */
-.light-theme .activity-card {
-    @apply bg-white/30;
-}
-
-/* Specific activity card text/border colors */
-.light-theme #charades-card {
-    @apply border-cyan-500/50 hover:border-cyan-500 text-cyan-600;
-}
-
-.light-theme #pictionary-card {
-    @apply border-pink-500/50 hover:border-pink-500 text-pink-600;
-}
-
-.light-theme #karaoke-card {
-    @apply border-yellow-500/50 hover:border-yellow-500 text-yellow-600;
-}
-
-
 .light-theme .contact-link {
     @apply text-gray-700 hover:text-black;
 }
@@ -211,27 +185,6 @@ body {
 
 .light-theme #mobile-nav-activities-dropdown {
     background-color: transparent !important;
-}
-
-/* --- Modal --- */
-.light-theme #image-modal .bg-gray-800 {
-    background-color: #ffffff !important;
-}
-
-.light-theme #image-modal #modal-title.text-cyan-300 {
-    color: #0e7490 !important;
-}
-
-.light-theme #image-modal #modal-title.text-pink-300 {
-    color: #be185d !important;
-}
-
-.light-theme #image-modal #modal-title.text-yellow-300 {
-    color: #ca8a04 !important;
-}
-
-.light-theme #image-modal .bg-gray-900 {
-    background-color: #e5e7eb !important;
 }
 
 /* --- Chaser Smiley Text --- */

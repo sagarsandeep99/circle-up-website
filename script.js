@@ -337,70 +337,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
-    // --- MODAL LOGIC ---
-
-    // Get modal elements
-    const imageModal = document.getElementById('image-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalImage = document.getElementById('modal-image');
-    const closeImageModalBtn = document.getElementById('close-image-modal');
-
-    // Get card elements
-    const charadesCard = document.getElementById('charades-card');
-    const pictionaryCard = document.getElementById('pictionary-card');
-    const karaokeCard = document.getElementById('karaoke-card');
-
-    // Function to open the image modal
-    function openImageModal(title, imageUrl, colorClass) {
-        if (!imageModal || !modalTitle || !modalImage) return;
-        modalTitle.textContent = title;
-        modalImage.src = imageUrl;
-        modalTitle.className = `text-3xl font-bold mb-4 text-center ${colorClass}`; // Apply color
-        imageModal.classList.remove('hidden');
-    }
-
-    // Function to close modal
-    function closeImageModal() {
-        if (!imageModal) return;
-        imageModal.classList.add('hidden');
-        modalImage.src = ""; // Clear image src
-    }
-
-    // --- Event Listeners for Cards ---
-
-    const placeholderUrl = (text, color) => `https://placehold.co/600x400/${color}/white?text=${text}`;
-
-    if (charadesCard) {
-        charadesCard.addEventListener('click', () => {
-            openImageModal('Dumb Charades', placeholderUrl('Charades+Image', '06b6d4'), 'text-cyan-300');
-        });
-    }
-
-    if (pictionaryCard) {
-        pictionaryCard.addEventListener('click', () => {
-            openImageModal('Pictionary', placeholderUrl('Pictionary+Image', 'ec4899'), 'text-pink-300');
-        });
-    }
-
-    if (karaokeCard) {
-        karaokeCard.addEventListener('click', () => {
-            openImageModal('Karaoke', placeholderUrl('Karaoke+Image', 'eab308'), 'text-yellow-300');
-        });
-    }
-
-    if (closeImageModalBtn) {
-        closeImageModalBtn.addEventListener('click', closeImageModal);
-    }
-
-    if (imageModal) {
-        imageModal.addEventListener('click', (e) => {
-            // Close if clicking on the background overlay
-            if (e.target === imageModal) {
-                closeImageModal();
-            }
-        });
-    }
-
     // --- Mobile Menu Toggle ---
     const menuBtn = document.getElementById('menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -418,49 +354,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Activities Dropdown Logic ---
+    // --- Get Scroll Container ---
+    const mainContainer = document.querySelector('main');
+    
+    // --- Hero Card Scroll Animation ---
+    const heroCard = document.getElementById('hero-card');
 
-    // Desktop
-    const navActivitiesLink = document.getElementById('nav-activities-link');
-    const navActivitiesDropdown = document.getElementById('nav-activities-dropdown');
-    const navActivitiesArrow = document.getElementById('nav-activities-arrow');
-
-    if (navActivitiesLink) {
-        navActivitiesLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (!navActivitiesDropdown || !navActivitiesArrow) return;
-            const isHidden = navActivitiesDropdown.classList.toggle('hidden');
-            navActivitiesArrow.classList.toggle('rotate-180', !isHidden);
+    if (heroCard && mainContainer) {
+        // Listen to the <main> element's scroll, not the window
+        mainContainer.addEventListener('scroll', () => {
+            if (mainContainer.scrollTop > 50) { // When scrolled down 50px
+                heroCard.classList.add('card-hidden');
+            } else { // When at the top
+                heroCard.classList.remove('card-hidden');
+            }
         });
     }
 
-    // Mobile
-    const mobileNavActivitiesLink = document.getElementById('mobile-nav-activities-link');
-    const mobileNavActivitiesDropdown = document.getElementById('mobile-nav-activities-dropdown');
-    const mobileNavActivitiesArrow = document.getElementById('mobile-nav-activities-arrow');
-
-    if (mobileNavActivitiesLink) {
-        mobileNavActivitiesLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (!mobileNavActivitiesDropdown || !mobileNavActivitiesArrow) return;
-            const isHidden = mobileNavActivitiesDropdown.classList.toggle('hidden');
-            mobileNavActivitiesArrow.classList.toggle('rotate-180', !isHidden);
-        });
-    }
-
-    // Close dropdowns if clicking outside
-    window.addEventListener('click', (e) => {
-        // Check for desktop nav
-        const navContainer = document.getElementById('activities-nav-container');
-        if (navContainer && !navContainer.contains(e.target)) {
-            if (navActivitiesDropdown) navActivitiesDropdown.classList.add('hidden');
-            if (navActivitiesArrow) navActivitiesArrow.classList.remove('rotate-180');
-        }
-    });
+    // --- Content Card Scroll Animation Observer (REMOVED) ---
 
     // Close mobile menu when a link *inside* it is clicked
     if (mobileMenu) {
-        mobileMenu.querySelectorAll('a.nav-link-mobile, a.dropdown-link-mobile').forEach(link => {
+        mobileMenu.querySelectorAll('a.nav-link-mobile').forEach(link => {
             link.addEventListener('click', () => {
                 if (!mobileMenu || !menuIconOpen || !menuIconClose) return;
                 mobileMenu.classList.add('hidden');
@@ -468,10 +383,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 menuIconOpen.classList.remove('hidden');
                 menuIconClose.classList.add('hidden');
                 menuIconClose.classList.remove('block');
-
-                // Also close the mobile activities dropdown if it was open
-                if (mobileNavActivitiesDropdown) mobileNavActivitiesDropdown.classList.add('hidden');
-                if (mobileNavActivitiesArrow) mobileNavActivitiesArrow.classList.remove('rotate-180');
             });
         });
     }

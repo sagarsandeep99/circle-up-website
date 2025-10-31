@@ -91,92 +91,35 @@
         <nav
             class="container mx-auto max-w-6xl px-4 py-3 flex justify-between items-center bg-gray-900/30 backdrop-blur-lg rounded-b-xl shadow-lg md:mt-4">
             <a href="#" class="flex items-center">
-                <img src="images/logos/logo_1.png" alt="Circle Up Logo" class="h-10 md:h-12 mr-2">
+                <img src="images/logos/circle-up-logo-1.png" alt="Circle Up Logo" class="h-10 md:h-12 mr-2">
                 <span class="sr-only">Circle Up</span>
             </a>
 
-            <div class="hidden md:flex items-center space-x-6">
-                <a href="#about" class="nav-link">About Us</a>
-
-                <div class="relative" id="activities-nav-container">
-                    <a href="#" id="nav-activities-link" class="nav-link flex items-center space-x-1">
-                        <span>Activities</span>
-                        <svg id="nav-activities-arrow" xmlns="http://www.w3.org/2000/svg"
-                            class="h-5 w-5 transition-transform" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </a>
-                    <div id="nav-activities-dropdown"
-                        class="hidden absolute top-full left-0 mt-2 w-48 bg-gray-800/80 backdrop-blur-lg rounded-lg shadow-xl overflow-hidden">
-                        <a href="#charades-card" class="dropdown-link">Dumb Charades</a>
-                        <a href="#pictionary-card" class="dropdown-link">Pictionary</a>
-                        <a href="#karaoke-card" class="dropdown-link">Karaoke</a>
-                    </div>
-                </div>
-
-                <a href="#contact" class="nav-link">Contact Us</a>
-
+            <div class="flex items-center">
+                <a href="#contact" class="nav-link" aria-label="Contact Us" title="Contact Us">
+                    <img src="images/logos/Contact UP.png" alt="Contact Us" class="h-10">
+                </a>
             </div>
 
-            <button id="menu-btn" class="md:hidden z-30">
-                <svg id="menu-icon-open" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white block" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
-                </svg>
-                <svg id="menu-icon-close" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white hidden"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
         </nav>
     </header>
 
-    <div id="mobile-menu"
-        class="hidden md:hidden fixed top-0 left-0 w-full h-screen bg-gray-900/90 backdrop-blur-xl z-10 pt-24">
-        <div class="container mx-auto max-w-6xl px-8 flex flex-col space-y-4 text-center">
-            <a href="#about" class="nav-link-mobile">About Us</a>
+    <main class="h-screen overflow-y-scroll snap-y snap-mandatory">
 
-            <div class="relative">
-                <a href="#" id="mobile-nav-activities-link"
-                    class="nav-link-mobile flex items-center justify-center space-x-1">
-                    <span>Activities</span>
-                    <svg id="mobile-nav-activities-arrow" xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5 transition-transform" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd"
-                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                            clip-rule="evenodd" />
-                    </svg>
-                </a>
-                <div id="mobile-nav-activities-dropdown"
-                    class="hidden mt-2 w-full rounded-lg shadow-xl overflow-hidden">
-                    <a href="#charades-card" class="dropdown-link-mobile">Dumb Charades</a>
-                    <a href="#pictionary-card" class="dropdown-link-mobile">Pictionary</a>
-                    <a href="#karaoke-card" class="dropdown-link-mobile">Karaoke</a>
-                </div>
+        <section class="h-screen w-full flex flex-col items-center justify-center snap-start relative z-10 px-6">
+            <div id="hero-card"
+                class="glass-card rounded-2xl px-8 py-12 md:px-16 md:py-16 max-w-3xl w-full text-center">
+                <h1 class="font-['Pacifico'] text-7xl md:text-8xl text-white mb-8"
+                    style="text-shadow: 0 0 15px rgba(255,255,255,0.3);">
+                    Circle Up
+                </h1>
+                <p id="tagline" class="text-2xl md:text-3xl text-gray-300">C U Around</p>
             </div>
+        </section>
 
-            <a href="#contact" class="nav-link-mobile">Contact Us</a>
-
-        </div>
-    </div>
-
-
-    <main class="relative z-10 container mx-auto max-w-3xl px-6 pb-24">
-        <div class="flex flex-col items-center text-center space-y-12">
-
-            <section class="flex flex-col items-center text-center h-screen justify-center">
-                <div class="glass-card rounded-2xl px-8 py-12 md:px-16 md:py-16">
-                    <h1 class="font-['Pacifico'] text-7xl md:text-8xl text-white mb-8"
-                        style="text-shadow: 0 0 15px rgba(255,255,255,0.3);">
-                        Circle Up
-                    </h1>
-                    <p id="tagline" class="text-2xl md:text-3xl text-gray-300">C U Around</p>
-                </div>
-            </section>
-
-            <section id="about" class="glass-card w-full text-center scroll-mt-28">
+        <section id="about"
+            class="h-screen w-full flex flex-col items-center justify-center snap-start relative z-10 px-6">
+            <div class="glass-card w-full text-center max-w-3xl p-6 md:p-12">
                 <h2 class="text-3xl font-bold mb-6">About Us</h2>
                 <div class="text-lg md:text-xl text-gray-200 space-y-4">
                     <p>
@@ -191,42 +134,23 @@
                         Because hey, every connection starts with a ‘C U Around.’
                     </p>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <section id="activities" class="w-full scroll-mt-28">
-                <h2 class="text-3xl font-bold mb-6 text-center">Tonight's Games</h2>
-                <div id="activities-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div id="charades-card"
-                        class="activity-card border-cyan-400/50 hover:border-cyan-300 text-cyan-300">
-                        <h3 class="text-3xl font-bold">Dumb Charades</h3>
-                    </div>
-
-                    <div id="pictionary-card"
-                        class="activity-card border-pink-400/50 hover:border-pink-300 text-pink-300">
-                        <h3 class="text-3xl font-bold">Pictionary</h3>
-                    </div>
-
-                    <div id="karaoke-card"
-                        class="activity-card border-yellow-400/50 hover:border-yellow-300 text-yellow-300">
-                        <h3 class="text-3xl font-bold">Karaoke</h3>
-                    </div>
-                </div>
-            </section>
-
-            <section id="contact" class="glass-card w-full scroll-mt-28">
+        <section id="contact"
+            class="h-screen w-full flex flex-col items-center justify-center snap-start relative z-10 px-6">
+            <div class="glass-card w-full text-center max-w-3xl p-6 md:p-12">
                 <h2 class="text-3xl font-bold mb-6">Get In Touch</h2>
                 <div class="flex justify-center items-center space-x-6 md:space-x-8">
+
                     <a href="https://api.whatsapp.com/send?phone=8217678506&text=Knock%20knock!%0AJust%20landed%20at%20Circle%20Up%20HQ.%20Seeking%20partners%20in%20crime%20and%20good%20vibes%20only%20%E2%9C%A8%0AGot%20room%20for%20one%20more%3F"
-                        target="_blank" rel="noopener noreferrer" class="contact-link">
-                        <svg class="h-8 w-8" fill="#25D366" viewBox="0 0 24 24">
-                            <path
-                                d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.0-6.556 5.333-11.891 11.893-11.891 3.181.0 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.0 6.557-5.335 11.89-11.891 11.89-1.996 0-3.903-.52-5.607-1.474l-6.17 1.688a.6.6 0 0 1-.75-.751zM11.893 2.906c-5.464 0-9.89 4.428-9.89 9.891.0 1.93.558 3.78 1.59 5.34l-.423 1.543 1.583-.41c1.474.902 3.22.144 5.039.144 5.465 0 9.89-4.428 9.89-9.89 0-5.464-4.426-9.89-9.89-9.89zm6.308 12.036c-.223-.112-1.32-.652-1.524-.726-.204-.074-.35-.112-.497.112-.147.224-.578.727-.708.874-.13.147-.26.167-.484.056-.223-.112-.944-.347-1.8-.1.104-.664.288-.874.112-.147-.037-.056-.074-.13-.112-.056-.019-.112-.037-.168-.056-.056-.019-.112-.037-.147-.056l-.112-.019c-.204-.037-.33-.074-.457-.204-.127-.13-.26-.26-.37-.41s-.112-.187-.019-.33c.094-.147.187-.26.28-.37.094-.112.13-.187.187-.28s.074-.168.037-.28c-.037-.112-.056-.147-.074-.168-.019-.019-.037-.037-.056-.056-.019-.019-.037-.037-.037-.056-.019-.019-.037-.037-.056-.074l-.112-.074c-.13-.074-.24-.13-.33-.168s-.187-.074-.28-.074c-.094 0-.168-.019-.24-.019-.074 0-.147 0-.223.019s-.204.019-.28.019c-.074 0-.147.019-.223.019-.074 0-.147.019-.204.019-.056 0-.112.019-.168.019l-.112.019c-.24.037-.48.112-.676.223-.196.112-.37.26-.508.43s-.223.37-.28.56c-.056.187-.074.37-.074.56s.019.37.056.56c.037.187.094.37.168.56s.147.35.24.5.204.31.33.46c.127.147.26.3.41.43.147.13.31.24.48.33s.35.168.54.223c.187.056.39.094.6.112.204.019.41.019.6.019s.39-.019.58-.056c.187-.037.37-.094.54-.168s.33-.168.48-.28c.147-.112.28-.24.41-.37s.24-.26.33-.41c.094-.147.168-.3.223-.46s.094-.33.112-.5.019-.33.019-.52c0-.094-.019-.187-.037-.28s-.056-.168-.094-.24z" />
-                        </svg>
-                        <span class="ml-2">WhatsApp</span>
+                        target="_blank" rel="noopener noreferrer" class="contact-link flex flex-col items-center">
+                        <img src="images/logos/whatsapp-green-logo.png" alt="WhatsApp" class="h-8 w-8">
+                        <span class="mt-2">WhatsApp</span>
                     </a>
 
                     <a href="https://www.instagram.com/circleup.irl" target="_blank" rel="noopener noreferrer"
-                        class="contact-link">
+                        class="contact-link flex flex-col items-center">
                         <svg class="h-8 w-8" fill="url(#instaGradient)" viewBox="0 0 24 24">
                             <defs>
                                 <radialGradient id="instaGradient" r="150%" cx="30%" cy="107%">
@@ -240,44 +164,68 @@
                             <path
                                 d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM12 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                         </svg>
-                        <span class="ml-2">Instagram</span>
+                        <span class="mt-2">Instagram</span>
                     </a>
 
                     <a href="https://www.youtube.com/@circleupirl" target="_blank" rel="noopener noreferrer"
-                        class="contact-link">
+                        class="contact-link flex flex-col items-center">
                         <svg class="h-8 w-8" fill="#FF0000" viewBox="0 0 24 24">
                             <path
                                 d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
                         </svg>
-                        <span class="ml-2">YouTube</span>
+                        <span class="mt-2">YouTube</span>
                     </a>
+
                 </div>
-            </section>
+            </div>
+        </section>
+        class="h-screen w-full flex flex-col items-center justify-center snap-start relative z-10 px-6">
+        <div class="glass-card w-full text-center max-w-3xl p-6 md:p-12">
+            <h2 class="text-3xl font-bold mb-6">Get In Touch</h2>
+            <div class="flex justify-center items-center space-x-6 md:space-x-8">
+                <a href="https://api.whatsapp.com/send?phone=8217678506&text=Knock%20knock!%0AJust%20landed%20at%20Circle%20Up%20HQ.%20Seeking%20partners%20in%20crime%20and%20good%20vibes%20only%20%E2%9C%A8%0AGot%20room%20for%20one%20more%3F"
+                    target="_blank" rel="noopener noreferrer" class="contact-link">
+                    <img src="images/logos/whatsapp-green-logo.png" alt="WhatsApp" class="h-8 w-8">
+                    <span class="ml-2">WhatsApp</span>
+                </a>
 
-        </div>
-    </main>
+                <a href="https://www.instagram.com/circleup.irl" target="_blank" rel="noopener noreferrer"
+                    class="contact-link">
+                    <svg class="h-8 w-8" fill="url(#instaGradient)" viewBox="0 0 24 24">
+                        <defs>
+                            <radialGradient id="instaGradient" r="150%" cx="30%" cy="107%">
+                                <stop stop-color="#fdf497" offset="0" />
+                                <stop stop-color="#fdf497" offset="0.05" />
+                                <stop stop-color="#fd5949" offset="0.45" />
+                                <stop stop-color="#d6249f" offset="0.6" />
+                                <stop stop-color="#285AEB" offset="0.9" />
+                            </radialGradient>
+                        </defs>
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM12 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                    </svg>
+                    <span class="ml-2">Instagram</span>
+                </a>
 
-    <div id="image-modal"
-        class="hidden fixed top-0 left-0 w-full h-full bg-black/80 backdrop-blur-sm z-40 flex items-center justify-center p-6">
-        <div class="bg-gray-800 p-6 rounded-2xl shadow-xl max-w-2xl w-full relative">
-            <button id="close-image-modal"
-                class="absolute -top-3 -right-3 bg-red-600 text-white rounded-full h-10 w-10 flex items-center justify-center text-2xl font-bold">&times;</button>
-            <h2 id="modal-title" class="text-3xl font-bold mb-4 text-center">Modal Title</h2>
-            <div class="aspect-video w-full rounded-lg overflow-hidden bg-gray-900">
-                <img id="modal-image" src="" alt="Activity Image" class="w-full h-full object-cover">
+                <a href="https://www.youtube.com/@circleupirl" target="_blank" rel="noopener noreferrer"
+                    class="contact-link">
+                    <svg class="h-8 w-8" fill="#FF0000" viewBox="0 0 24 24">
+                        <path
+                            d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                    </svg>
+                    <span class="ml-2">YouTube</span>
+                </a>
             </div>
         </div>
-    </div>
+        </section>
 
+    </main>
 
     <div id="fab-container" class="fixed bottom-6 right-6 z-30 flex flex-col space-y-4">
 
         <a href="https://api.whatsapp.com/send?phone=8217678506&text=Knock%20knock!%0AJust%20landed%20at%20Circle%20Up%20HQ.%20Seeking%20partners%20in%20crime%20and%20good%20vibes%20only%20%E2%9C%A8%0AGot%20room%20for%20one%20more%3F"
             target="_blank" rel="noopener noreferrer" class="fab-button" aria-label="Contact on WhatsApp">
-            <svg class="h-7 w-7" fill="#25D366" viewBox="0 0 24 24">
-                <path
-                    d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.0-6.556 5.333-11.891 11.893-11.891 3.181.0 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.0 6.557-5.335 11.89-11.891 11.89-1.996 0-3.903-.52-5.607-1.474l-6.17 1.688a.6.6 0 0 1-.75-.751zM11.893 2.906c-5.464 0-9.89 4.428-9.89 9.891.0 1.93.558 3.78 1.59 5.34l-.423 1.543 1.583-.41c1.474.902 3.22.144 5.039.144 5.465 0 9.89-4.428 9.89-9.89 0-5.464-4.426-9.89-9.89-9.89zm6.308 12.036c-.223-.112-1.32-.652-1.524-.726-.204-.074-.35-.112-.497.112-.147.224-.578.727-.708.874-.13.147-.26.167-.484.056-.223-.112-.944-.347-1.8-.1.104-.664.288-.874.112-.147-.037-.056-.074-.13-.112-.056-.019-.112-.037-.168-.056-.056-.019-.112-.037-.147-.056l-.112-.019c-.204-.037-.33-.074-.457-.204-.127-.13-.26-.26-.37-.41s-.112-.187-.019-.33c.094-.147.187-.26.28-.37.094-.112.13-.187.187-.28s.074-.168.037-.28c-.037-.112-.056-.147-.074-.168-.019-.019-.037-.037-.056-.056-.019-.019-.037-.037-.037-.056-.019-.019-.037-.037-.056-.074l-.112-.074c-.13-.074-.24-.13-.33-.168s-.187-.074-.28-.074c-.094 0-.168-.019-.24-.019-.074 0-.147 0-.223.019s-.204.019-.28.019c-.074 0-.147.019-.223.019-.074 0-.147.0.19-.204.019-.056 0-.112.019-.168.019l-.112.019c-.24.037-.48.112-.676.223-.196.112-.37.26-.508.43s-.223.37-.28.56c-.056.187-.074.37-.074.56s.019.37.056.56c.037.187.094.37.168.56s.147.35.24.5.204.31.33.46c.127.147.26.3.41.43.147.13.31.24.48.33s.35.168.54.223c.187.056.39.094.6.112.204.019.41.019.6.019s.39-.019.58-.056c.187-.037.37-.094.54-.168s.33-.168.48-.28c.147-.112.28-.24.41-.37s.24-.26.33-.41c.094-.147.168-.3.223-.46s.094-.33.112-.5.019-.33.019-.52c0-.094-.019-.187-.037-.28s-.056-.168-.094-.24z" />
-            </svg>
+            <img src="images/logos/whatsapp-green-logo.png" alt="WhatsApp" class="h-7 w-7">
         </a>
 
         <button id="theme-toggle-btn-desktop" class="fab-button text-gray-300" aria-label="Toggle theme">
