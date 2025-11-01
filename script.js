@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ];
         const material = new THREE.MeshNormalMaterial();
 
-        for (let i = 0; i < 80; i++) { // Set to 100 shapes total
+        for (let i = 0; i < 80; i++) { // Set to 80 shapes
             const geometry = geometries[Math.floor(Math.random() * geometries.length)];
             const mesh = new THREE.Mesh(geometry, material);
 
@@ -357,6 +357,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Get Scroll Container ---
     const mainContainer = document.querySelector('main');
     
+    // --- START: New Logo Click to Scroll Top ---
+    const logoLink = document.getElementById('logo-link');
+
+    if (logoLink && mainContainer) {
+        logoLink.addEventListener('click', (e) => {
+            e.preventDefault(); // Stop the '#' from being added to the URL
+            mainContainer.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+    // --- END: New Logo Click to Scroll Top ---
+
     // --- Hero Card Scroll Animation ---
     const heroCard = document.getElementById('hero-card');
 
@@ -371,7 +385,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Content Card Scroll Animation Observer (REMOVED) ---
+    // --- START: Content Card Scroll Animation Observer ---
+    if (mainContainer) {
+        const animatedElements = document.querySelectorAll('.animate-slide-left, .animate-slide-right, .animate-slide-up');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Add the 'is-visible' class to trigger the animation
+                    entry.target.classList.add('is-visible');
+                } else {
+                    // UPDATED: Un-commented this line
+                    // This removes the class when the element is not visible,
+                    // triggering the "out" animation and allowing it to
+                    // re-animate on "in"
+                    entry.target.classList.remove('is-visible');
+                }
+            });
+        }, {
+            root: mainContainer, 
+            threshold: 0.3 // Trigger when 30% of the element is visible
+        });
+
+        animatedElements.forEach(el => {
+            observer.observe(el);
+        });
+    }
+    // --- END: Content Card Scroll Animation Observer ---
+
 
     // Close mobile menu when a link *inside* it is clicked
     if (mobileMenu) {
@@ -386,6 +427,119 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // --- START: New Gallery Modal Logic ---
+
+    // Define gallery image paths
+    const galleries = {
+        musical: [
+            'images/musical/musical-1.png',
+            'images/musical/musical-2.png',
+            'images/musical/musical-3.png',
+            'images/musical/musical-4.png',
+            'images/musical/musical-5.png',
+            'images/musical/musical-6.png'
+        ],
+        irl: [
+            'images/irl/irl-1.png',
+            'images/irl/irl-2.png',
+            'images/irl/irl-3.png',
+            'images/irl/irl-4.png',
+            'images/irl/irl-5.png',
+            'images/irl/irl-6.png'
+        ],
+        playground: [
+            'images/playground/playground-1.png',
+            'images/playground/playground-2.png',
+            'images/playground/playground-3.png',
+            'images/playground/playground-4.png',
+            'images/playground/playground-5.png',
+            'images/playground/playground-6.png'
+        ],
+        diy: [
+            'images/diy/diy-1.png',
+            'images/diy/diy-2.png',
+            'images/diy/diy-3.png',
+            'images/diy/diy-4.png',
+            'images/diy/diy-5.png',
+            'images/diy/diy-6.png',
+            'images/diy/diy-7.png'
+        ]
+    };
+
+    // Get modal elements
+    const galleryModal = document.getElementById('gallery-modal');
+    const galleryTrack = document.getElementById('gallery-track');
+    const closeButton = document.getElementById('gallery-close');
+    const nextButton = document.getElementById('gallery-next');
+    const prevButton = document.getElementById('gallery-prev');
+    const galleryTriggers = document.querySelectorAll('.activity-image-card');
+
+    let currentGallery = [];
+    let currentIndex = 0;
+
+    function updateSlidePosition() {
+        galleryTrack.style.transform = `translateX(-${currentIndex * 100}vw)`;
+    }
+
+    function openModal(galleryName) {
+        if (!galleries[galleryName] || !mainContainer) return;
+
+        currentGallery = galleries[galleryName];
+        currentIndex = 0;
+
+        // Populate the gallery track
+        galleryTrack.innerHTML = '';
+        currentGallery.forEach(src => {
+            const slide = document.createElement('div');
+            slide.className = 'gallery-slide';
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = "Gallery image";
+            // Add error handling for broken images
+            img.onerror = () => {
+                img.alt = "Image not found";
+                // You could style the broken image state further if needed
+            };
+            slide.appendChild(img);
+            galleryTrack.appendChild(slide);
+        });
+
+        updateSlidePosition(); // Set to first slide
+        galleryModal.classList.remove('hidden');
+        mainContainer.style.overflow = 'hidden'; // Stop main page from scrolling
+    }
+
+    function closeModal() {
+        if (!mainContainer) return;
+        galleryModal.classList.add('hidden');
+        mainContainer.style.overflow = 'scroll'; // Re-enable main page scrolling
+    }
+
+    function nextImage() {
+        currentIndex = (currentIndex + 1) % currentGallery.length;
+        updateSlidePosition();
+    }
+
+    function prevImage() {
+        currentIndex = (currentIndex - 1 + currentGallery.length) % currentGallery.length;
+        updateSlidePosition();
+    }
+
+    // Add event listeners for modal
+    galleryTriggers.forEach(trigger => {
+        trigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            const galleryName = trigger.dataset.gallery;
+            openModal(galleryName);
+        });
+    });
+
+    if (closeButton) closeButton.addEventListener('click', closeModal);
+    if (nextButton) nextButton.addEventListener('click', nextImage);
+    if (prevButton) prevButton.addEventListener('click', prevImage);
+
+    // --- END: New Gallery Modal Logic ---
 
 
     // --- Start Everything ---

@@ -39,6 +39,46 @@ body {
     transform: translateY(100px); /* Slide down 100px and fade */
 }
 
+/* START: New Hero Brand Title Styles */
+/* This is the code from your image */
+#brand-title {
+    font-family: 'Monoton', sans-serif;
+    font-weight: 400;
+    color: #ffffff; /* Default color for "ircle P" */
+    text-shadow: 0 0 15px #ffffffe2;
+}
+
+#brand-title .cu-color {
+    color: #f200ff; /* Using a pink from the light theme gradient */
+    text-shadow: 0 0 20px #f200ff;
+}
+/* END: New Hero Brand Title Styles */
+
+
+/* START: New Tagline Styles */
+#tagline {
+    font-weight: 400;
+    /* Base color is inherited from .text-gray-300 in HTML */
+}
+
+#tagline .cu-color {
+    font-family: 'Train One', sans-serif; /* C and U font */
+    color: #f200ff;
+    text-shadow: 0 0 20px #f200ff;
+}
+
+/* New rule for "Around" */
+#tagline .tagline-around {
+    font-family: 'Fascinate Inline', sans-serif; /* "Around" font */
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    /* Adjust font size if needed, Fascinate Inline can look smaller */
+    font-size: 1.1em; 
+    margin-left: 0.25em; /* Small space */
+}
+/* END: New Tagline Styles */
+
+
 /* --- Navigation Links --- */
 .nav-link {
     @apply text-gray-300 hover:text-white transition-colors duration-200;
@@ -52,6 +92,60 @@ body {
 .contact-link {
     @apply flex items-center text-gray-300 hover:text-white hover:scale-110 transition-all duration-200 ease-in-out text-lg;
 }
+
+/* START: New Activity Card Image Styles */
+.activity-image-card {
+    position: relative;
+    overflow: hidden; /* This keeps the image corners rounded */
+    cursor: pointer; /* Add pointer on hover */
+}
+
+.activity-bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the card */
+    z-index: 1;
+    opacity: 0.4; /* The "little transparent" effect */
+    transition: all 0.3s ease-in-out;
+}
+
+.activity-title {
+    position: relative;
+    z-index: 2;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* "Emblema One" font style */
+.activity-title .font-main {
+    display: block;
+    font-family: 'Emblema One', sans-serif;
+    font-weight: 400; /* Emblema One only has 400 weight */
+    font-size: 3rem; /* 48px */
+    line-height: 1.1;
+    text-transform: uppercase;
+}
+
+/* "Aloha" font style */
+.activity-title .font-sub {
+    display: block;
+    font-family: 'Poiret One', sans-serif;
+    font-size: 1.875rem; /* 30px (reduced size) */
+    line-height: 1.2;
+    margin-top: 0.25rem;
+}
+
+
+/* Hover effect */
+.activity-image-card:hover .activity-bg-image {
+    opacity: 0.6;
+    transform: scale(1.05);
+}
+/* END: New Activity Card Image Styles */
+
 
 /* --- 2D CHASER SMILEY --- */
 #chaser-container {
@@ -107,6 +201,129 @@ body {
 
 
 /* ==========================================================================
+   START: New Scroll Animation Classes
+==========================================================================
+*/
+
+/* Initial state for elements sliding from the left */
+.animate-slide-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* Initial state for elements sliding from the right */
+.animate-slide-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    /* UPDATED: Removed transition-delay from here */
+}
+
+/* Initial state for elements sliding from the bottom */
+.animate-slide-up {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* The state when elements are visible */
+.is-visible {
+    opacity: 1;
+    transform: translate(0, 0); /* Changed to 2D translate */
+}
+
+/* UPDATED: Add a delay only to the "in" animation for the right-side cards */
+.animate-slide-right.is-visible {
+    transition-delay: 0.2s;
+}
+
+
+/* ==========================================================================
+   START: New Gallery Modal Styles
+==========================================================================
+*/
+#gallery-modal {
+    /* REMOVED: display: flex; */
+    /* This is now handled by the 'flex' class in the HTML */
+}
+
+.gallery-container {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden; /* This hides the other slides */
+}
+
+.gallery-track {
+    display: flex;
+    height: 100%;
+    /* This is the smooth sliding effect */
+    transition: transform 0.5s ease-in-out;
+}
+
+.gallery-slide {
+    width: 100vw;
+    height: 100vh;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem; /* Add padding so image doesn't touch edges */
+    box-sizing: border-box; /* Include padding in width/height */
+}
+
+.gallery-slide img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Show the whole image */
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.gallery-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 60;
+    background: rgba(26, 26, 40, 0.5);
+    backdrop-filter: blur(10px);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    font-size: 2rem;
+    line-height: 3rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    user-select: none; /* Prevent text selection */
+}
+
+.gallery-nav:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.gallery-prev {
+    left: 1rem;
+}
+
+.gallery-next {
+    right: 1rem;
+}
+
+.gallery-close {
+    top: 1rem;
+    right: 1rem;
+    width: 3rem;
+    height: 3rem;
+    font-size: 2rem;
+    line-height: 3rem; /* Adjust line height for &times; */
+    transform: none; /* No Y-transform */
+}
+
+/* ==========================================================================
    START: New Light Theme Overrides
 ==========================================================================
 */
@@ -118,7 +335,6 @@ body {
 }
 
 /* --- General Text --- */
-/* We need to override the specific text colors from Tailwind */
 .light-theme .text-white {
     color: #1a202c !important;
 }
@@ -132,20 +348,26 @@ body {
 }
 
 /* --- Logo & Tagline --- */
-.light-theme .font-\[\'Pacifico\'\].text-white {
-    color: #2d3748 !important;
+.light-theme #brand-title {
+    color: #2d3748; /* Default dark color for "ircle P" */
+    text-shadow: 0 0 15px rgba(45, 55, 72, 0.2);
 }
 
-.light-theme h1.text-white {
-    text-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+.light-theme #tagline .tagline-around {
+    color: #4a5568 !important; /* Default for "Around" */
+    text-shadow: 0 0 5px rgba(74, 85, 104, 0.1);
 }
 
-.light-theme #tagline.text-gray-300 {
-    color: #4a5568 !important;
+/* Shared color for C and U in light mode */
+.light-theme #brand-title .cu-color,
+.light-theme #tagline .cu-color {
+    color: #f200ff !important;
+    text-shadow: 0 0 15px rgba(242, 0, 255, 0.4);
 }
+/* END: Logo & Tagline Overrides */
+
 
 /* --- Header / Nav --- */
-/* We escape the '/' in the class name with '\/' */
 .light-theme nav.bg-gray-900\/30 {
     background-color: rgba(255, 255, 255, 0.6) !important;
 }
@@ -177,6 +399,26 @@ body {
 .light-theme .contact-link {
     @apply text-gray-700 hover:text-black;
 }
+
+/* START: New Activity Card (Light) Override */
+.light-theme .activity-title {
+    color: #2d3748; /* Dark text color */
+    text-shadow: 0 1px 4px rgba(255, 255, 255, 0.3); /* Lighter shadow */
+}
+/* END: New Activity Card (Light) Override */
+
+/* START: New Gallery (Light) Override */
+.light-theme .gallery-nav {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #2d3748;
+}
+
+.light-theme .gallery-nav:hover {
+    background: rgba(255, 255, 255, 0.8);
+}
+/* END: New Gallery (Light) Override */
+
 
 /* --- Mobile Menu --- */
 .light-theme #mobile-menu {
