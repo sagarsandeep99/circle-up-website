@@ -166,9 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Add a resize listener to keep it in place (until it's clicked)
             window.addEventListener('resize', positionChaserInitially);
-
-            // Make it visible once JS is loaded and positioned
-            chaserContainer.style.visibility = 'visible';
+            
+            // Visibility is now controlled by the Intersection Observer
         }
 
         // Attempt motion controls on first interaction
@@ -263,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chaserTextElement.innerText = taunts[newIndex];
     }
 
-    // --- UPDATED FUNCTION ---
+    // --- **REVERTED FUNCTION** ---
     // Positions the chaser next to the tagline initially
     function positionChaserInitially() {
         const tagline = document.getElementById('tagline');
@@ -385,6 +384,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- START: Smiley Visibility Observer ---
+    const heroSection = document.querySelector('main > section:first-of-type');
+
+    if (mainContainer && heroSection && chaserContainer) {
+        const heroObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    chaserContainer.style.visibility = 'visible';
+                } else {
+                    chaserContainer.style.visibility = 'hidden';
+                }
+            });
+        }, {
+            root: mainContainer, // Observe within the <main> scroll area
+            threshold: 0.5 // Trigger when 50% of the hero is visible
+        });
+
+        heroObserver.observe(heroSection);
+    }
+    // --- END: Smiley Visibility Observer ---
+
     // --- START: Content Card Scroll Animation Observer ---
     if (mainContainer) {
         const animatedElements = document.querySelectorAll('.animate-slide-left, .animate-slide-right, .animate-slide-up');
@@ -395,10 +415,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Add the 'is-visible' class to trigger the animation
                     entry.target.classList.add('is-visible');
                 } else {
-                    // UPDATED: Un-commented this line
                     // This removes the class when the element is not visible,
-                    // triggering the "out" animation and allowing it to
-                    // re-animate on "in"
+                    // triggering the "out" animation
                     entry.target.classList.remove('is-visible');
                 }
             });
@@ -463,7 +481,6 @@ document.addEventListener('DOMContentLoaded', () => {
             'images/diy/diy-4.png',
             'images/diy/diy-5.png',
             'images/diy/diy-6.png',
-            'images/diy/diy-7.png'
         ]
     };
 

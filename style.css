@@ -217,7 +217,6 @@ body {
     opacity: 0;
     transform: translateX(50px);
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    /* UPDATED: Removed transition-delay from here */
 }
 
 /* Initial state for elements sliding from the bottom */
@@ -233,7 +232,7 @@ body {
     transform: translate(0, 0); /* Changed to 2D translate */
 }
 
-/* UPDATED: Add a delay only to the "in" animation for the right-side cards */
+/* Add a delay only to the "in" animation for the right-side cards */
 .animate-slide-right.is-visible {
     transition-delay: 0.2s;
 }
@@ -244,8 +243,7 @@ body {
 ==========================================================================
 */
 #gallery-modal {
-    /* REMOVED: display: flex; */
-    /* This is now handled by the 'flex' class in the HTML */
+    /* This is handled by the 'flex' class in the HTML */
 }
 
 .gallery-container {
@@ -322,6 +320,57 @@ body {
     line-height: 3rem; /* Adjust line height for &times; */
     transform: none; /* No Y-transform */
 }
+
+/* ==========================================================================
+   START: Mobile Responsive Overrides (767px and down)
+==========================================================================
+*/
+@media (max-width: 767px) {
+    /* --- Hero Section --- */
+    #brand-title {
+        font-size: 3.75rem; /* 60px, down from 7xl/8xl */
+        line-height: 1.1;
+    }
+
+    #tagline {
+        font-size: 1.5rem; /* 24px, down from 2xl/3xl */
+    }
+
+    /* --- Activity Cards --- */
+    .activity-title .font-main {
+        font-size: 2.25rem; /* 36px, down from 3rem */
+    }
+
+    .activity-title .font-sub {
+        font-size: 1.25rem; /* 20px, down from 1.875rem */
+    }
+
+    /* Adjust padding on cards for more space */
+    #hero-card {
+        padding-left: 1.5rem; /* 24px */
+        padding-right: 1.5rem; /* 24px */
+    }
+
+    .activity-image-card {
+        padding: 1.5rem; /* 24px */
+    }
+
+    /* --- Gallery --- */
+    .gallery-slide {
+        padding: 1rem; /* Less padding on mobile gallery */
+    }
+
+    /* --- FABs --- */
+    #fab-container {
+        bottom: 1.5rem;
+        right: 1.5rem;
+    }
+}
+/* ==========================================================================
+   END: Mobile Responsive Overrides
+==========================================================================
+*/
+
 
 /* ==========================================================================
    START: New Light Theme Overrides
