@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Fascinate+Inline&family=Inter:wght@400;500;700&family=Monoton&family=Pacifico&family=Poiret+One&family=Train+One&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Fascinate+Inline&family=Inter:wght@400;500;700&family=Monoton&family=Pacifico&family=Poiret+One&family=Train+One&family=Sedgwick+Ave+Display&family=Rubik+Iso&family=WDXL+Lubrifont+SC&display=swap"
         rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -90,7 +90,7 @@
 
     <header class="fixed top-0 left-0 w-full z-20">
         <nav
-            class="container mx-auto max-w-6xl px-4 py-3 flex justify-between items-center bg-gray-900/30 backdrop-blur-lg rounded-b-xl shadow-lg md:mt-4">
+            class="container mx-auto max-w-6xl px-4 py-3 flex justify-between items-center bg-gray-800/40 backdrop-blur-lg rounded-b-xl shadow-lg md:mt-4">
             <a href="#" id="logo-link" class="flex items-center">
                 <img src="images/logos/circle-up-logo-1.png" alt="Circle Up Logo" class="h-10 md:h-12 mr-2">
                 <span class="sr-only">Circle Up</span>
@@ -122,9 +122,10 @@
 
         <section id="about"
             class="h-screen w-full flex flex-col items-center justify-center snap-start relative z-10 px-6">
-            <div class="glass-card w-full text-center max-w-3xl p-6 md:p-12 animate-slide-up">
-                <h2 class="text-3xl font-bold mb-6">About Us</h2>
-                <div class="text-lg md:text-xl text-gray-200 space-y-4">
+            <div class="glass-card w-full text-center max-w-3xl p-6 md:p-12 animate-slide-up rounded-3xl">
+                <h2 class="text-3xl font-bold mb-6 section-title">Who We Are</h2>
+
+                <div class="text-lg md:text-xl text-gray-200 space-y-4 about-content">
                     <p>
                         At Circle Up, strangers don’t stay strangers for long. We host cozy hangouts where real talks,
                         good vibes, and belly laughs flow naturally.
@@ -143,7 +144,7 @@
         <section id="activities-1"
             class="h-screen w-full flex flex-col items-center justify-center snap-start relative z-10 px-6">
             <div class="w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-                
+
                 <a href="#" data-gallery="musical" role="button"
                     class="glass-card activity-image-card animate-slide-left min-h-[300px] flex items-center justify-center p-8 rounded-2xl">
                     <img src="images/musical/musical-main.png" alt="Musical After-Dark" class="activity-bg-image">
@@ -167,7 +168,7 @@
         <section id="activities-2"
             class="h-screen w-full flex flex-col items-center justify-center snap-start relative z-10 px-6">
             <div class="w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-                
+
                 <a href="#" data-gallery="playground" role="button"
                     class="glass-card activity-image-card animate-slide-left min-h-[300px] flex items-center justify-center p-8 rounded-2xl">
                     <img src="images/playground/playground-main.png" alt="Playground Lounge" class="activity-bg-image">
@@ -190,8 +191,8 @@
         </section>
         <section id="contact"
             class="h-screen w-full flex flex-col items-center justify-center snap-start relative z-10 px-6">
-            <div class="glass-card w-full text-center max-w-3xl p-6 md:p-12 animate-slide-up">
-                <h2 class="text-3xl font-bold mb-6">Get In Touch</h2>
+            <div class="glass-card w-full text-center max-w-3xl p-6 md:p-12 animate-slide-up rounded-3xl">
+                <h2 class="text-3xl font-bold mb-6 section-title">Get In Touch</h2>
                 <div class="flex justify-center items-center space-x-6 md:space-x-8">
 
                     <a href="https://api.whatsapp.com/send?phone=8217678506&text=Knock%20knock!%0AJust%H%20landed%20at%20Circle%20Up%20HQ.%20Seeking%20partners%20in%20crime%20and%20good%20vibes%20only%20%E2%9C%A8%0AGot%20room%20for%20one%20more%3F"
@@ -255,8 +256,9 @@
 
     </div>
 
-    <div id="gallery-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-lg">
-        
+    <div id="gallery-modal"
+        class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-lg">
+
         <button id="gallery-close" class="gallery-nav gallery-close" aria-label="Close gallery">
             &times;
         </button>
@@ -271,7 +273,7 @@
 
         <div class="gallery-container">
             <div id="gallery-track" class="gallery-track">
-                </div>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>

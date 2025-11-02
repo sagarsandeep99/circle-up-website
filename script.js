@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Add a resize listener to keep it in place (until it's clicked)
             window.addEventListener('resize', positionChaserInitially);
-            
+
             // Visibility is now controlled by the Intersection Observer
         }
 
@@ -355,7 +355,68 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Get Scroll Container ---
     const mainContainer = document.querySelector('main');
-    
+
+    // --- START: New Pull-to-Refresh Logic ---
+    let pullStartY = 0;
+    let isPulling = false;
+    const pullThreshold = 80; // Min distance in px to trigger refresh
+
+    if (mainContainer) {
+        mainContainer.addEventListener('touchstart', (e) => {
+            // Only start tracking if we are at the very top
+            if (mainContainer.scrollTop === 0) {
+                isPulling = true;
+                pullStartY = e.touches[0].clientY;
+            }
+        }, { passive: true });
+
+        mainContainer.addEventListener('touchmove', (e) => {
+            if (!isPulling) return;
+
+            const currentY = e.touches[0].clientY;
+            let pullDistance = currentY - pullStartY;
+
+            // Only act if pulling down
+            if (pullDistance > 0) {
+                // This prevents the whole page from bouncing (iOS)
+                e.preventDefault();
+
+                // Add a "stretchy" feel (dampen the pull)
+                let dampenedDistance = Math.pow(pullDistance, 0.85);
+
+                // Animate the <main> container pulling down
+                mainContainer.style.transition = 'none';
+                mainContainer.style.transform = `translateY(${dampenedDistance}px)`;
+            }
+
+        }, { passive: false }); // Needs to be 'false' to allow preventDefault()
+
+        mainContainer.addEventListener('touchend', (e) => {
+            if (!isPulling) return;
+            isPulling = false;
+
+            const currentY = e.changedTouches[0].clientY;
+            let pullDistance = currentY - pullStartY;
+
+            // Reset the transition to be smooth
+            mainContainer.style.transition = 'transform 0.3s ease-out';
+
+            if (pullDistance > pullThreshold) {
+                // Show a "loading" state
+                mainContainer.style.transform = `translateY(50px)`;
+
+                // Wait for animation to finish, then reload
+                setTimeout(() => {
+                    location.reload();
+                }, 300);
+            } else {
+                // Not far enough, snap back
+                mainContainer.style.transform = 'translateY(0px)';
+            }
+        });
+    }
+    // --- END: New Pull-to-Refresh Logic ---
+
     // --- START: New Logo Click to Scroll Top ---
     const logoLink = document.getElementById('logo-link');
 
@@ -421,7 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }, {
-            root: mainContainer, 
+            root: mainContainer,
             threshold: 0.3 // Trigger when 30% of the element is visible
         });
 
@@ -556,8 +617,128 @@ document.addEventListener('DOMContentLoaded', () => {
     if (nextButton) nextButton.addEventListener('click', nextImage);
     if (prevButton) prevButton.addEventListener('click', prevImage);
 
+    // --- START: New "Click Backdrop to Close" Logic ---
+    if (galleryModal) {
+        galleryModal.addEventListener('click', (e) => {
+
+            // Check if the click was on a nav button (or its icon)
+            // The .closest() method checks the element itself and its parents
+            if (e.target.closest('.gallery-nav')) {
+                return; // It was a button, do nothing
+            }
+
+            // Check if the click was directly on an image
+            if (e.target.tagName === 'IMG') {
+                return; // It was an image, do nothing
+            }
+
+            // If the click was not on a button or an image,
+            // it must have been on the "blank space" (the backdrop).
+            closeModal();
+        });
+    }
+    //
+
+    // --- START: Gallery Swipe Logic ---
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    if (galleryModal) {
+        galleryModal.addEventListener('touchstart', (e) => {
+            // Get the starting touch position
+            touchStartX = e.changedTouches[0].clientX;
+            touchStartY = e.changedTouches[0].clientY;
+        }, { passive: true }); // Use passive for better scroll performance
+
+        galleryModal.addEventListener('touchend', (e) => {
+            // Get the ending touch position
+            let touchEndX = e.changedTouches[0].clientX;
+            let touchEndY = e.changedTouches[0].clientY;
+
+            // Calculate the difference
+            let diffX = touchStartX - touchEndX;
+            let diffY = touchStartY - touchEndY;
+
+            // Define a minimum swipe distance
+            const swipeThreshold = 50;
+
+            // Check if the horizontal swipe is greater than the vertical swipe
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (diffX > swipeThreshold) {
+                    // Swiped left (e.g., start 200, end 100 = diff 100)
+                    nextImage();
+                } else if (diffX < -swipeThreshold) {
+                    // Swiped right (e.g., start 100, end 200 = diff -100)
+                    prevImage();
+                }
+            }
+        }, { passive: true });
+    }
+    // --- END: Gallery Swipe Logic ---
     // --- END: New Gallery Modal Logic ---
 
+    // --- START: New 3D Tilt Card Effect ---
+
+    // This function applies the tilt effect to any element passed to it
+    const addTiltEffect = (element) => {
+        if (!element) return;
+
+        element.addEventListener('mousemove', (e) => {
+
+            // --- Start: Modified Visibility Check ---
+            let isCardVisible = true; // Assume visible
+
+            // Case 1: Check for "About" or "Contact" cards
+            if (element.classList.contains('animate-slide-up')) {
+                if (!element.classList.contains('is-visible')) {
+                    isCardVisible = false;
+                }
+            }
+
+            // Case 2: Check for "Hero" card
+            if (element.id === 'hero-card') {
+                if (element.classList.contains('card-hidden')) {
+                    isCardVisible = false;
+                }
+            }
+
+            if (!isCardVisible) return; // Don't tilt if not visible
+            // --- End: Modified Visibility Check ---
+
+
+            const rect = element.getBoundingClientRect();
+            // Get mouse position relative to the element's center
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+
+            // Calculate rotation (dampen it)
+            const maxRotate = 8; // Max 8 degrees
+            const rotateY = (x / (rect.width / 2)) * maxRotate;
+            const rotateX = (-y / (rect.height / 2)) * maxRotate;
+
+            // Apply the style. Add a slight scale for a "pop"
+            // We use a short, linear transition so it feels responsive
+            element.style.transition = 'transform 0.05s linear';
+            element.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+        });
+
+        element.addEventListener('mouseleave', () => {
+            // Reset to default (flat)
+            // This transition matches all cards, so it's safe
+            element.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            element.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
+        });
+    };
+
+    // Get the cards and apply the effect
+    const aboutCard = document.querySelector('#about .glass-card');
+    const contactCard = document.querySelector('#contact .glass-card');
+
+    addTiltEffect(heroCard);
+    addTiltEffect(aboutCard);
+    addTiltEffect(contactCard);
+
+    // --- END: New 3D Tilt Card Effect ---
 
     // --- Start Everything ---
     if (typeof THREE !== 'undefined') {

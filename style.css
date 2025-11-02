@@ -2,14 +2,16 @@
 */
 
 /* This is new and REQUIRED for the snap-scroll layout */
-html, body {
+html,
+body {
     height: 100%;
     overflow: hidden;
 }
 
 body {
     /* Dark violet and black gradient */
-    background: radial-gradient(circle, #000000, #18022c); /* Black to Dark Violet */
+    background: radial-gradient(circle, #000000, #18022c);
+    /* Black to Dark Violet */
     background-attachment: fixed;
     font-family: 'Inter', sans-serif;
 }
@@ -36,7 +38,8 @@ body {
 
 #hero-card.card-hidden {
     opacity: 0;
-    transform: translateY(100px); /* Slide down 100px and fade */
+    transform: translateY(100px);
+    /* Slide down 100px and fade */
 }
 
 /* START: New Hero Brand Title Styles */
@@ -44,14 +47,17 @@ body {
 #brand-title {
     font-family: 'Monoton', sans-serif;
     font-weight: 400;
-    color: #ffffff; /* Default color for "ircle P" */
+    color: #ffffff;
+    /* Default color for "ircle P" */
     text-shadow: 0 0 15px #ffffffe2;
 }
 
 #brand-title .cu-color {
-    color: #f200ff; /* Using a pink from the light theme gradient */
+    color: #f200ff;
+    /* Using a pink from the light theme gradient */
     text-shadow: 0 0 20px #f200ff;
 }
+
 /* END: New Hero Brand Title Styles */
 
 
@@ -62,20 +68,24 @@ body {
 }
 
 #tagline .cu-color {
-    font-family: 'Train One', sans-serif; /* C and U font */
+    font-family: 'Train One', sans-serif;
+    /* C and U font */
     color: #f200ff;
     text-shadow: 0 0 20px #f200ff;
 }
 
 /* New rule for "Around" */
 #tagline .tagline-around {
-    font-family: 'Fascinate Inline', sans-serif; /* "Around" font */
+    font-family: 'Fascinate Inline', sans-serif;
+    /* "Around" font */
     color: #ffffff;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
     /* Adjust font size if needed, Fascinate Inline can look smaller */
-    font-size: 1.1em; 
-    margin-left: 0.25em; /* Small space */
+    font-size: 1.1em;
+    margin-left: 0.25em;
+    /* Small space */
 }
+
 /* END: New Tagline Styles */
 
 
@@ -93,11 +103,21 @@ body {
     @apply flex items-center text-gray-300 hover:text-white hover:scale-110 transition-all duration-200 ease-in-out text-lg;
 }
 
+/* START: New Rule for Contact Link Text */
+.contact-link span {
+    font-family: 'WDXL Lubrifont SC', sans-serif;
+    font-weight: 400; /* This font only supports the 400 weight */
+    font-size: 1.1rem; /* Adjusted size for this font */
+}
+/* END: New Rule for Contact Link Text */
+
 /* START: New Activity Card Image Styles */
 .activity-image-card {
     position: relative;
-    overflow: hidden; /* This keeps the image corners rounded */
-    cursor: pointer; /* Add pointer on hover */
+    overflow: hidden;
+    /* This keeps the image corners rounded */
+    cursor: pointer;
+    /* Add pointer on hover */
 }
 
 .activity-bg-image {
@@ -106,9 +126,11 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Ensures the image covers the card */
+    object-fit: cover;
+    /* Ensures the image covers the card */
     z-index: 1;
-    opacity: 0.4; /* The "little transparent" effect */
+    opacity: 0.4;
+    /* The "little transparent" effect */
     transition: all 0.3s ease-in-out;
 }
 
@@ -123,8 +145,10 @@ body {
 .activity-title .font-main {
     display: block;
     font-family: 'Emblema One', sans-serif;
-    font-weight: 400; /* Emblema One only has 400 weight */
-    font-size: 3rem; /* 48px */
+    font-weight: 400;
+    /* Emblema One only has 400 weight */
+    font-size: 3rem;
+    /* 48px */
     line-height: 1.1;
     text-transform: uppercase;
 }
@@ -133,7 +157,8 @@ body {
 .activity-title .font-sub {
     display: block;
     font-family: 'Poiret One', sans-serif;
-    font-size: 1.875rem; /* 30px (reduced size) */
+    font-size: 1.875rem;
+    /* 30px (reduced size) */
     line-height: 1.2;
     margin-top: 0.25rem;
 }
@@ -144,6 +169,7 @@ body {
     opacity: 0.6;
     transform: scale(1.05);
 }
+
 /* END: New Activity Card Image Styles */
 
 
@@ -229,7 +255,8 @@ body {
 /* The state when elements are visible */
 .is-visible {
     opacity: 1;
-    transform: translate(0, 0); /* Changed to 2D translate */
+    transform: translate(0, 0);
+    /* Changed to 2D translate */
 }
 
 /* Add a delay only to the "in" animation for the right-side cards */
@@ -249,7 +276,8 @@ body {
 .gallery-container {
     width: 100vw;
     height: 100vh;
-    overflow: hidden; /* This hides the other slides */
+    overflow: hidden;
+    /* This hides the other slides */
 }
 
 .gallery-track {
@@ -266,14 +294,17 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4rem; /* Add padding so image doesn't touch edges */
-    box-sizing: border-box; /* Include padding in width/height */
+    padding: 4rem;
+    /* Add padding so image doesn't touch edges */
+    box-sizing: border-box;
+    /* Include padding in width/height */
 }
 
 .gallery-slide img {
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain; /* Show the whole image */
+    object-fit: contain;
+    /* Show the whole image */
     border-radius: 0.5rem;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
@@ -295,7 +326,8 @@ body {
     text-align: center;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
-    user-select: none; /* Prevent text selection */
+    user-select: none;
+    /* Prevent text selection */
 }
 
 .gallery-nav:hover {
@@ -317,8 +349,10 @@ body {
     width: 3rem;
     height: 3rem;
     font-size: 2rem;
-    line-height: 3rem; /* Adjust line height for &times; */
-    transform: none; /* No Y-transform */
+    line-height: 3rem;
+    /* Adjust line height for &times; */
+    transform: none;
+    /* No Y-transform */
 }
 
 /* ==========================================================================
@@ -326,38 +360,47 @@ body {
 ==========================================================================
 */
 @media (max-width: 767px) {
+
     /* --- Hero Section --- */
     #brand-title {
-        font-size: 3.75rem; /* 60px, down from 7xl/8xl */
+        font-size: 3.75rem;
+        /* 60px, down from 7xl/8xl */
         line-height: 1.1;
     }
 
     #tagline {
-        font-size: 1.5rem; /* 24px, down from 2xl/3xl */
+        font-size: 1.5rem;
+        /* 24px, down from 2xl/3xl */
     }
 
     /* --- Activity Cards --- */
     .activity-title .font-main {
-        font-size: 2.25rem; /* 36px, down from 3rem */
+        font-size: 2.25rem;
+        /* 36px, down from 3rem */
     }
 
     .activity-title .font-sub {
-        font-size: 1.25rem; /* 20px, down from 1.875rem */
+        font-size: 1.25rem;
+        /* 20px, down from 1.875rem */
     }
 
     /* Adjust padding on cards for more space */
     #hero-card {
-        padding-left: 1.5rem; /* 24px */
-        padding-right: 1.5rem; /* 24px */
+        padding-left: 1.5rem;
+        /* 24px */
+        padding-right: 1.5rem;
+        /* 24px */
     }
 
     .activity-image-card {
-        padding: 1.5rem; /* 24px */
+        padding: 1.5rem;
+        /* 24px */
     }
 
     /* --- Gallery --- */
     .gallery-slide {
-        padding: 1rem; /* Less padding on mobile gallery */
+        padding: 1rem;
+        /* Less padding on mobile gallery */
     }
 
     /* --- FABs --- */
@@ -366,11 +409,44 @@ body {
         right: 1.5rem;
     }
 }
+
 /* ==========================================================================
    END: Mobile Responsive Overrides
 ==========================================================================
 */
 
+/* ==========================================================================
+   START: New Custom Font Styles
+==========================================================================
+*/
+
+.section-title {
+    font-family: 'Rubik Iso', cursive;
+    font-weight: 400;
+    /* This 3D font needs to be large to be clear */
+    font-size: 2.5rem; /* 40px */
+    line-height: 1.2; /* Adjust line height for blocky font */
+}
+
+.about-content {
+    font-family: 'Sedgwick Ave Display', cursive;
+    font-weight: 400;
+    /* Reverted to this font, 1.75rem works well */
+    font-size: 1.75rem; /* 28px */
+    line-height: 1.6; /* Add spacing between lines */
+}
+
+/* Make sure the headings look good on light theme too */
+.light-theme .section-title {
+    color: #2d3748;
+}
+
+.light-theme .about-content {
+    font-family: 'Sedgwick Ave Display', cursive; /* Also update here */
+    color: #4a5568;
+    font-size: 1.75rem; /* 28px */
+    line-height: 1.6; /* Match the dark mode styles */
+}
 
 /* ==========================================================================
    START: New Light Theme Overrides
@@ -379,7 +455,7 @@ body {
 
 .light-theme {
     background: radial-gradient(circle, #fbcfe8, #fef3c7, #a7f3d0, #fbcfe8);
-    background-attachment: fixed; 
+    background-attachment: fixed;
     color: #1a202c !important;
 }
 
@@ -398,12 +474,14 @@ body {
 
 /* --- Logo & Tagline --- */
 .light-theme #brand-title {
-    color: #2d3748; /* Default dark color for "ircle P" */
+    color: #2d3748;
+    /* Default dark color for "ircle P" */
     text-shadow: 0 0 15px rgba(45, 55, 72, 0.2);
 }
 
 .light-theme #tagline .tagline-around {
-    color: #4a5568 !important; /* Default for "Around" */
+    color: #4a5568 !important;
+    /* Default for "Around" */
     text-shadow: 0 0 5px rgba(74, 85, 104, 0.1);
 }
 
@@ -413,11 +491,12 @@ body {
     color: #f200ff !important;
     text-shadow: 0 0 15px rgba(242, 0, 255, 0.4);
 }
+
 /* END: Logo & Tagline Overrides */
 
 
 /* --- Header / Nav --- */
-.light-theme nav.bg-gray-900\/30 {
+.light-theme nav.bg-gray-800\/50 {
     background-color: rgba(255, 255, 255, 0.6) !important;
 }
 
@@ -451,9 +530,12 @@ body {
 
 /* START: New Activity Card (Light) Override */
 .light-theme .activity-title {
-    color: #2d3748; /* Dark text color */
-    text-shadow: 0 1px 4px rgba(255, 255, 255, 0.3); /* Lighter shadow */
+    color: #2d3748;
+    /* Dark text color */
+    text-shadow: 0 1px 4px rgba(255, 255, 255, 0.3);
+    /* Lighter shadow */
 }
+
 /* END: New Activity Card (Light) Override */
 
 /* START: New Gallery (Light) Override */
@@ -466,6 +548,7 @@ body {
 .light-theme .gallery-nav:hover {
     background: rgba(255, 255, 255, 0.8);
 }
+
 /* END: New Gallery (Light) Override */
 
 
