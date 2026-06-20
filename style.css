@@ -98,6 +98,28 @@ body {
     @apply text-gray-300 hover:text-white transition-colors duration-200 text-2xl font-medium;
 }
 
+/* START: New Icon Layout Rules for House Rules and Contact Up */
+.nav-icons-container {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem; /* Clean spacing between icons */
+}
+
+.nav-icon-link {
+    @apply flex items-center transition-all duration-200 ease-in-out;
+}
+
+.nav-icon-link:hover {
+    @apply scale-110;
+}
+
+.nav-icon {
+    width: 24px;  /* Matches your design viewport */
+    height: 24px;
+    object-fit: contain;
+}
+/* END: New Icon Layout Rules */
+
 /* --- Contact Link Styles --- */
 .contact-link {
     @apply flex items-center text-gray-300 hover:text-white hover:scale-110 transition-all duration-200 ease-in-out text-lg;

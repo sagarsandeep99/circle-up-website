@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circle UP | House Rules</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Emblema+One&family=Fascinate+Inline&family=Inter:wght@400;500;700&family=Monoton&family=Pacifico&family=Poiret+One&family=Train+One&family=Sedgwick+Ave+Display&family=Rubik+Iso&family=WDXL+Lubrifont+SC&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Use isolated page styling only -->
+    <link rel="stylesheet" href="rules-style.css">
+</head>
+
+<body class="bg-[#0f0f1a] text-white font-['Inter'] overflow-x-hidden">
+
+    <canvas id="bg-canvas" class="fixed top-0 left-0 w-full h-full -z-10"></canvas>
+
+    <header class="fixed top-0 left-0 w-full z-20">
+        <nav
+            class="container mx-auto max-w-6xl px-4 py-3 flex justify-between items-center bg-gray-800/40 backdrop-blur-lg rounded-b-xl shadow-lg md:mt-4">
+
+            <a href="https://www.circleupirl.com" id="logo-link" class="flex items-center">
+                <img src="../images/logos/Circle-up-logo-3D.png" alt="Circle Up Logo" class="h-10 md:h-12 mr-2">
+                <span class="sr-only">Circle Up</span>
+            </a>
+
+            <div class="flex items-center gap-5">
+                <a href="#contact" class="nav-link flex items-center" aria-label="Contact Us" title="Contact Us">
+                    <img src="../images/logos/contact-up.png" alt="Contact Us" class="h-10 md:h-11">
+                </a>
+
+                <a href="/HouseRules/" class="hover:scale-110 transition-all duration-200 block flex-shrink-0"
+                    title="House Rules">
+                    <img src="../images/logos/HouseRules.png" alt="House Rules"
+                        class="w-18 h-18 md:w-20 md:h-20 object-contain"
+                        style="width: 72px; height: 72px; min-width: 72px; min-height: 72px;">
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Natural Linear Scroll Fluid Main Container -->
+    <main class="w-full flex flex-col items-center pt-32 pb-24 px-4 md:px-6 relative z-10">
+
+        <!-- Top Hero Card Framework Block -->
+        <div id="hero-card" class="glass-card rounded-2xl px-8 py-6 md:px-16 md:py-8 max-w-3xl w-full text-center mb-8 animate-slide-up">
+            <h1 id="brand-title" class="text-3xl md:text-5xl mb-1 !font-['Train_One']">
+                <span class="cu-color">✨CUE</span> - House Rules✨
+            </h1>
+            <p id="tagline" class="text-lg md:text-xl text-gray-300 !font-['WDXL_Lubrifont_SC']">
+                <span>A few simple things that help keep every Circle thoughtful, comfortable and memorable.</span>
+            </p>
+        </div>
+
+        <!-- Continuous Vertical Rule Card Stack Container -->
+        <div class="w-full max-w-3xl space-y-6 animate-slide-up">
+
+            <!-- Card 1: Verification & Privacy -->
+            <div class="glass-card rule-card-left rounded-2xl p-5 md:p-6 border border-white/10 transition-all duration-300 hover:border-pink-500/30">
+                <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                    <span>🔐</span> Verification & Privacy
+                </h3>
+                <ul class="text-gray-300 text-xs md:text-sm space-y-2.5 list-disc leading-relaxed">
+                    <li>All participants undergo a basic verification process to help us maintain a safe and comfortable environment.</li>
+                    <li>You may mask or hide your Aadhaar number before uploading. We only require your name and age for identity verification and legal compliance.</li>
+                    <li>Information shared with Team CircleUp, including Aadhaar copies, Instagram handles, and other public social profiles, is used solely for verification purposes and is treated with discretion. We do not share personal information with other participants without your consent.</li>
+                    <li>Please carry the same government-issued ID (physical or digital) used during registration on the day of the event.</li>
+                    <li>In case of discrepancies between your submitted details and the ID presented at entry, Team CircleUp may request additional verification or deny entry.</li>
+                    <li>Some venues may require age verification or valid identification. Please ensure you carry the necessary documents to avoid any inconvenience.</li>
+                </ul>
+            </div>
+
+            <!-- Card 2: Tickets & Pricing -->
+            <div class="glass-card rule-card-left rounded-2xl p-5 md:p-6 border border-white/10 transition-all duration-300 hover:border-pink-500/30">
+                <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                    <span>🎟️</span> Tickets & Pricing
+                </h3>
+                <ul class="text-gray-300 text-xs md:text-sm space-y-2.5 list-disc leading-relaxed">
+                    <li>Ticket prices and inclusions vary depending on the venue, theme, and overall experience.</li>
+                    <li>Event details, inclusions, and pricing will always be shared before payment.</li>
+                    <li>Your seat is reserved exclusively for you once payment is confirmed.</li>
+                </ul>
+            </div>
+
+            <!-- Card 3: Refunds & Transfers -->
+            <div class="glass-card rule-card-left rounded-2xl p-5 md:p-6 border border-white/10 transition-all duration-300 hover:border-pink-500/30">
+                <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                    <span>🔄</span> Refunds & Transfers
+                </h3>
+                <ul class="text-gray-300 text-xs md:text-sm space-y-2.5 list-disc leading-relaxed">
+                    <li>Refunds are not available within 48 hours of the event, as last-minute cancellations affect our carefully curated guest balance and planning.</li>
+                    <li>If CircleUp cancels an event, guests may choose either a full refund or transfer their booking to a future Circle.</li>
+                    <li>Transfer requests and exceptional situations will always be approached thoughtfully and handled on a case-by-case basis by Team CircleUp.</li>
+                </ul>
+            </div>
+
+            <!-- Card 4: Event Updates -->
+            <div class="glass-card rule-card-left rounded-2xl p-5 md:p-6 border border-white/10 transition-all duration-300 hover:border-pink-500/30">
+                <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                    <span>📍</span> Event Updates
+                </h3>
+                <ul class="text-gray-300 text-xs md:text-sm space-y-2.5 list-disc leading-relaxed">
+                    <li>In rare cases, venues, timings, or formats may change due to unforeseen circumstances. If so, we'll keep you informed as early as possible.</li>
+                    <li>Menus, activities, and experiences may vary from one Circle to another.</li>
+                    <li>To preserve the flow of the experience, we encourage guests to arrive on time. In some cases, significantly late arrivals may find it difficult to join the Circle seamlessly.</li>
+                </ul>
+            </div>
+
+            <!-- Card 5: Food & Beverages -->
+            <div class="glass-card rule-card-left rounded-2xl p-5 md:p-6 border border-white/10 transition-all duration-300 hover:border-pink-500/30">
+                <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                    <span>🍽️</span> Food & Beverages
+                </h3>
+                <ul class="text-gray-300 text-xs md:text-sm space-y-2.5 list-disc leading-relaxed">
+                    <li>Food and beverage inclusions vary by event and venue.</li>
+                    <li>While we carefully choose our partner venues, the taste, quality, and preparation of food and beverages remain the responsibility of the venue.</li>
+                    <li>Guests are encouraged to inform us in advance about allergies or dietary preferences, though accommodations may vary by venue.</li>
+                    <li>Any additional food or beverages ordered beyond the CircleUp package are kindly requested to be settled directly with the venue.</li>
+                    <li>We believe the best evenings are built on great conversations and good company. If you choose to drink, we encourage you to do so responsibly and help keep the vibe enjoyable for everyone.</li>
+                </ul>
+            </div>
+
+            <!-- Card 6: Content & Social Media -->
+            <div class="glass-card rule-card-left rounded-2xl p-5 md:p-6 border border-white/10 transition-all duration-300 hover:border-pink-500/30">
+                <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                    <span>📸</span> Content & Social Media
+                </h3>
+                <ul class="text-gray-300 text-xs md:text-sm space-y-2.5 list-disc leading-relaxed">
+                    <li>Photos and videos may be captured during events for memories and community content.</li>
+                    <li>Content may be shared across CircleUp's social channels and promotional platforms.</li>
+                    <li>Guests who prefer limited visibility are encouraged to inform Team CircleUp in advance.</li>
+                </ul>
+            </div>
+
+            <!-- Card 7: Community Guidelines -->
+            <div class="glass-card rule-card-left rounded-2xl p-5 md:p-6 border border-white/10 transition-all duration-300 hover:border-pink-500/30">
+                <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                    <span>🤝</span> Community Guidelines
+                </h3>
+                <ul class="text-gray-300 text-xs md:text-sm space-y-2.5 list-disc leading-relaxed">
+                    <li>We expect all guests to respect personal boundaries and contribute to a safe, welcoming environment.</li>
+                    <li>We're committed to creating a safe and welcoming space. Behaviour that negatively impacts the comfort or safety of others may lead to being asked to leave the event.</li>
+                    <li>We love good energy, but not at the expense of others. Guests whose behaviour significantly disrupts the experience may be unable to continue participating in the event.</li>
+                    <li>Last-minute cancellations and no-shows make it difficult to maintain balanced Circles and may affect future invitations.</li>
+                </ul>
+            </div>
+
+            <!-- Card 8: No Solicitation Policy -->
+            <div class="glass-card rule-card-left rounded-2xl p-5 md:p-6 border border-white/10 transition-all duration-300 hover:border-pink-500/30">
+                <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                    <span>🚫</span> No Solicitation Policy
+                </h3>
+                <ul class="text-gray-300 text-xs md:text-sm space-y-2.5 list-disc leading-relaxed">
+                    <li>CircleUp is designed for genuine connections. We kindly ask guests to avoid treating the experience as a platform for unsolicited business promotion or recruitment.</li>
+                    <li>Please seek consent before promoting businesses, services, or social media pages.</li>
+                </ul>
+            </div>
+
+            <!-- Card 9: Personal Belongings -->
+            <div class="glass-card rule-card-left rounded-2xl p-5 md:p-6 border border-white/10 transition-all duration-300 hover:border-pink-500/30">
+                <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                    <span>🎒</span> Personal Belongings
+                </h3>
+                <ul class="text-gray-300 text-xs md:text-sm space-y-2.5 list-disc leading-relaxed">
+                    <li>Please keep an eye on your valuables and personal belongings throughout the event.</li>
+                    <li>Personal items remain the responsibility of each guest.</li>
+                </ul>
+            </div>
+
+            <!-- Card 10: Getting Home Safely -->
+            <div class="glass-card rule-card-left rounded-2xl p-5 md:p-6 border border-white/10 transition-all duration-300 hover:border-pink-500/30">
+                <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                    <span>🚗</span> Getting Home Safely
+                </h3>
+                <ul class="text-gray-300 text-xs md:text-sm space-y-2.5 list-disc leading-relaxed">
+                    <li>If you've been drinking, please plan your ride responsibly. Your safety—and everyone else's—matters.</li>
+                    <li>CircleUp encourages guests to prioritize their well-being and make safe travel arrangements after the event.</li>
+                </ul>
+            </div>
+
+            <!-- Card 11: A Small Request -->
+            <div class="glass-card rule-card-left rounded-2xl p-5 md:p-6 border border-white/10 transition-all duration-300 hover:border-pink-500/30">
+                <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                    <span>✨</span> A Small Request
+                </h3>
+                <ul class="text-gray-300 text-xs md:text-sm space-y-2.5 list-disc leading-relaxed">
+                    <li>Every Circle is built on trust, curiosity, respect, and good energy.</li>
+                    <li>Come with an open mind, leave judgments at the door, and remember—everyone starts as a stranger.</li>
+                    <li>Come curious, leave kinder, and remember that great conversations often begin with unfamiliar faces.</li>
+                    <li>Be the kind of person you'd be excited to meet.</li>
+                    <li>And most importantly—have fun. ✨</li>
+                </ul>
+            </div>
+
+            <!-- Footer Contact Layout Integration Panel -->
+            <div id="contact" class="glass-card rounded-3xl w-full text-center p-6 md:p-12 mt-12">
+                <h2 class="text-3xl font-bold mb-6 section-title">Get In Touch</h2>
+                <div class="flex justify-center items-center space-x-6 md:space-x-8">
+
+                    <a href="https://api.whatsapp.com/send?phone=8217678506&text=Knock%20knock!%0AJust%20landed%20at%20Circle%20Up%20HQ.%20Seeking%20partners%20in%20crime%20and%20good%20vibes%20only%20%E2%9C%A8%0AGot%20room%20for%20one%20more%3F"
+                        target="_blank" rel="noopener noreferrer" class="contact-link flex flex-col items-center">
+                        <img src="../images/logos/whatsapp-green-logo.png" alt="WhatsApp" class="h-8 w-8">
+                        <span class="mt-2">WhatsApp</span>
+                    </a>
+
+                    <a href="https://www.instagram.com/circleup.irl" target="_blank" rel="noopener noreferrer"
+                        class="contact-link flex flex-col items-center">
+                        <svg class="h-8 w-8" fill="url(#instaGradient)" viewBox="0 0 24 24">
+                            <defs>
+                                <radialGradient id="instaGradient" r="150%" cx="30%" cy="107%">
+                                    <stop stop-color="#fdf497" offset="0" />
+                                    <stop stop-color="#fdf497" offset="0.05" />
+                                    <stop stop-color="#fd5949" offset="0.45" />
+                                    <stop stop-color="#d6249f" offset="0.6" />
+                                    <stop stop-color="#285AEB" offset="0.9" />
+                                </radialGradient>
+                            </defs>
+                            <path
+                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM12 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                        </svg>
+                        <span class="mt-2">Instagram</span>
+                    </a>
+
+                    <a href="https://www.youtube.com/@circleupirl" target="_blank" rel="noopener noreferrer"
+                        class="contact-link flex flex-col items-center">
+                        <svg class="h-8 w-8" fill="#FF0000" viewBox="0 0 24 24">
+                            <path
+                                d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                        </svg>
+                        <span class="mt-2">YouTube</span>
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="fab-container" class="fixed bottom-6 right-6 z-30 flex flex-col space-y-4">
+
+        <a href="https://api.whatsapp.com/send?phone=8217678506&text=Knock%20knock!%0AJust%20landed%20at%20Circle%20Up%20HQ.%20Seeking%20partners%20in%20crime%20and%20good%20vibes%20only%20%E2%9C%A8%0AGot%20room%20for%20one%20more%3F"
+            target="_blank" rel="noopener noreferrer" class="fab-button" aria-label="Contact on WhatsApp">
+            <img src="../images/logos/whatsapp-green-logo.png" alt="WhatsApp" class="h-7 w-7">
+        </a>
+
+        <button id="theme-toggle-btn-desktop" class="fab-button text-gray-300" aria-label="Toggle theme">
+            <svg id="theme-icon-sun-desktop" class="h-7 w-7 hidden" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <svg id="theme-icon-moon-desktop" class="h-7 w-7 block" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+        </button>
+
+    </div>
+
+    <script src="rules-script.js"></script>
+
+</body>
+
+</html>
