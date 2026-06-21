@@ -3,10 +3,11 @@
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
+    
     const canvas = document.getElementById('bg-canvas');
     if (!canvas) return;
 
-    // 1. Force absolute background confinement via inline styles
+    // Force absolute background canvas configuration constraints
     canvas.style.setProperty('position', 'fixed', 'important');
     canvas.style.setProperty('top', '0', 'important');
     canvas.style.setProperty('left', '0', 'important');
@@ -15,20 +16,24 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.style.setProperty('z-index', '-1', 'important');
     canvas.style.setProperty('pointer-events', 'none', 'important');
 
-    // 2. Three.js Setup
+    // Scene Setup
     const scene = new THREE.Scene();
+    
+    // Explicitly inject the core deep dark branding tone into ThreeJS rendering environment
+    scene.background = new THREE.Color(0x0f0f1a);
+    
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     
     const renderer = new THREE.WebGLRenderer({
         canvas: canvas,
-        alpha: true,
+        alpha: false, // Set to false to cleanly showcase layout scene color
         antialias: true
     });
     
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    // 3. Create Rainbow Iridescent Geometries (Matching image_94a759.png)
+    // Create Iridescent Geometries
     const material = new THREE.MeshNormalMaterial();
     const meshes = [];
     const geometries = [
@@ -38,21 +43,24 @@ document.addEventListener('DOMContentLoaded', () => {
         new THREE.SphereGeometry(0.7, 16, 16)
     ];
 
-    // Spawn random floating crystals
-    for (let i = 0; i < 20; i++) {
+    // Increased element count to 50 to maintain perfect balanced layout density across wide screen edges
+    const totalObjects = 50;
+
+    // Spawn and distribute random floating clusters
+    for (let i = 0; i < totalObjects; i++) {
         const randomGeo = geometries[Math.floor(Math.random() * geometries.length)];
         const mesh = new THREE.Mesh(randomGeo, material);
         
-        // Distribute loosely across screen space
-        mesh.position.x = (Math.random() - 0.5) * 15;
-        mesh.position.y = (Math.random() - 0.5) * 15;
+        // Expanded layout coordinates spread to reach out to the far left and far right blank spaces
+        mesh.position.x = (Math.random() - 0.5) * 35; // Increased from 15 to 35 to span ultra-widescreen layout borders
+        mesh.position.y = (Math.random() - 0.5) * 22; // Increased from 15 to 22 for deep vertical distribution mapping
         mesh.position.z = (Math.random() - 0.5) * 10 - 5;
         
-        // Random scale variations
+        // Random size variations
         const scale = Math.random() * 0.5 + 0.4;
         mesh.scale.set(scale, scale, scale);
         
-        // Custom movement vectors
+        // Motion metrics configurations
         mesh.userData = {
             rotSpeedX: Math.random() * 0.01,
             rotSpeedY: Math.random() * 0.01,
@@ -66,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     camera.position.z = 8;
 
-    // 4. Smooth Animation Loop (Purely visual, zero scroll hijacking)
+    // Linear Animation Engine Frame System Execution Loop
     function animate() {
         requestAnimationFrame(animate);
         
@@ -76,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
             mesh.rotation.x += mesh.userData.rotSpeedX;
             mesh.rotation.y += mesh.userData.rotSpeedY;
             
-            // Subtle floating drifting up/down
+            // Continuous custom wave drift vertical float offsets
             mesh.position.y += Math.sin(time + mesh.userData.phase) * mesh.userData.floatSpeed;
         });
         
@@ -85,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     animate();
 
-    // 5. Responsive Resize Handler
+    // Viewport Dimension Tracking Constraints
     window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
