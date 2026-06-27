@@ -53,17 +53,20 @@
 
         <div class="w-full max-w-3xl space-y-6 animate-slide-up">
 
+            <!-- Checkout Form Container -->
             <form id="payment-form" class="space-y-6">
-                
+
+                <!-- Section 1: Ticket Selection Table -->
                 <div class="glass-card rounded-2xl p-5 md:p-6 border border-white/10 shadow-xl">
                     <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
                         <span>🎟️</span> Select Your Ticket
                     </h2>
-                    
+
                     <div class="overflow-x-auto rounded-xl border border-white/5 bg-black/20">
                         <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="border-b border-white/10 bg-white/5 text-xs md:text-sm font-semibold tracking-wider text-gray-300">
+                                <tr
+                                    class="border-b border-white/10 bg-white/5 text-xs md:text-sm font-semibold tracking-wider text-gray-300">
                                     <th class="p-3 md:p-4 text-center w-12">Select</th>
                                     <th class="p-3 md:p-4">Ticket Type</th>
                                     <th class="p-3 md:p-4 text-center">Tickets Available</th>
@@ -71,36 +74,51 @@
                                 </tr>
                             </thead>
                             <tbody class="text-xs md:text-sm divide-y divide-white/5">
-                                <tr id="row-early_bird_female" class="hover:bg-white/5 transition-colors cursor-pointer" onclick="const r = document.getElementById('ticket-early-female'); if(!r.disabled) r.checked = true">
+                                <!-- Option 1 -->
+                                <tr class="hover:bg-white/5 transition-colors cursor-pointer"
+                                    onclick="document.getElementById('ticket-early-female').checked = true">
                                     <td class="p-3 md:p-4 text-center">
-                                        <input type="radio" id="ticket-early-female" name="ticket_type" value="early_bird_female" data-price="1000" class="w-4 h-4 accent-pink-500 cursor-pointer" required>
+                                        <input type="radio" id="ticket-early-female" name="ticket_type"
+                                            value="early_bird_female" data-price="1000"
+                                            class="w-4 h-4 accent-pink-500 cursor-pointer" required>
                                     </td>
-                                    <td class="p-3 md:p-4 font-medium text-white ticket-label">Early Bird (Female)</td>
-                                    <td class="p-3 md:p-4 text-center text-gray-400 font-mono count-display" id="count-early_bird_female">3 left</td>
+                                    <td class="p-3 md:p-4 font-medium text-white">Early Bird (Female)</td>
+                                    <td class="p-3 md:p-4 text-center text-gray-400 font-mono">3 left</td>
                                     <td class="p-3 md:p-4 text-right font-semibold text-pink-400">₹1,000</td>
                                 </tr>
-                                <tr id="row-early_bird_male" class="hover:bg-white/5 transition-colors cursor-pointer" onclick="const r = document.getElementById('ticket-early-male'); if(!r.disabled) r.checked = true">
+                                <!-- Option 2 -->
+                                <tr class="hover:bg-white/5 transition-colors cursor-pointer"
+                                    onclick="document.getElementById('ticket-early-male').checked = true">
                                     <td class="p-3 md:p-4 text-center">
-                                        <input type="radio" id="ticket-early-male" name="ticket_type" value="early_bird_male" data-price="1800" class="w-4 h-4 accent-pink-500 cursor-pointer">
+                                        <input type="radio" id="ticket-early-male" name="ticket_type"
+                                            value="early_bird_male" data-price="1800"
+                                            class="w-4 h-4 accent-pink-500 cursor-pointer">
                                     </td>
-                                    <td class="p-3 md:p-4 font-medium text-white ticket-label">Early Bird (Male)</td>
-                                    <td class="p-3 md:p-4 text-center text-gray-400 font-mono count-display" id="count-early_bird_male">3 left</td>
+                                    <td class="p-3 md:p-4 font-medium text-white">Early Bird (Male)</td>
+                                    <td class="p-3 md:p-4 text-center text-gray-400 font-mono">3 left</td>
                                     <td class="p-3 md:p-4 text-right font-semibold text-pink-400">₹1,800</td>
                                 </tr>
-                                <tr id="row-regular_female" class="hover:bg-white/5 transition-colors cursor-pointer" onclick="const r = document.getElementById('ticket-reg-female'); if(!r.disabled) r.checked = true">
+                                <!-- Option 3 -->
+                                <tr class="hover:bg-white/5 transition-colors cursor-pointer"
+                                    onclick="document.getElementById('ticket-reg-female').checked = true">
                                     <td class="p-3 md:p-4 text-center">
-                                        <input type="radio" id="ticket-reg-female" name="ticket_type" value="regular_female" data-price="1300" class="w-4 h-4 accent-pink-500 cursor-pointer">
+                                        <input type="radio" id="ticket-reg-female" name="ticket_type"
+                                            value="regular_female" data-price="1300"
+                                            class="w-4 h-4 accent-pink-500 cursor-pointer">
                                     </td>
-                                    <td class="p-3 md:p-4 font-medium text-white ticket-label">Regular (Female)</td>
-                                    <td class="p-3 md:p-4 text-center text-gray-400 font-mono count-display" id="count-regular_female">2 left</td>
+                                    <td class="p-3 md:p-4 font-medium text-white">Regular (Female)</td>
+                                    <td class="p-3 md:p-4 text-center text-gray-400 font-mono">2 left</td>
                                     <td class="p-3 md:p-4 text-right font-semibold text-pink-400">₹1,300</td>
                                 </tr>
-                                <tr id="row-regular_male" class="hover:bg-white/5 transition-colors cursor-pointer" onclick="const r = document.getElementById('ticket-reg-male'); if(!r.disabled) r.checked = true">
+                                <!-- Option 4 -->
+                                <tr class="hover:bg-white/5 transition-colors cursor-pointer"
+                                    onclick="document.getElementById('ticket-reg-male').checked = true">
                                     <td class="p-3 md:p-4 text-center">
-                                        <input type="radio" id="ticket-reg-male" name="ticket_type" value="regular_male" data-price="2100" class="w-4 h-4 accent-pink-500 cursor-pointer">
+                                        <input type="radio" id="ticket-reg-male" name="ticket_type" value="regular_male"
+                                            data-price="2100" class="w-4 h-4 accent-pink-500 cursor-pointer">
                                     </td>
-                                    <td class="p-3 md:p-4 font-medium text-white ticket-label">Regular (Male)</td>
-                                    <td class="p-3 md:p-4 text-center text-gray-400 font-mono count-display" id="count-regular_male">2 left</td>
+                                    <td class="p-3 md:p-4 font-medium text-white">Regular (Male)</td>
+                                    <td class="p-3 md:p-4 text-center text-gray-400 font-mono">2 left</td>
                                     <td class="p-3 md:p-4 text-right font-semibold text-pink-400">₹2,100</td>
                                 </tr>
                             </tbody>
@@ -108,37 +126,51 @@
                     </div>
                 </div>
 
+                <!-- Section 2: User Contact Information -->
                 <div class="glass-card rounded-2xl p-5 md:p-6 border border-white/10 shadow-xl space-y-4">
                     <h2 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
                         <span>🔐</span> Contact Details
                     </h2>
-                    
+
                     <div class="grid grid-cols-1 gap-4 text-left">
+                        <!-- Full Name -->
                         <div>
-                            <label for="user-name" class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Full Name</label>
+                            <label for="user-name"
+                                class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Full
+                                Name</label>
                             <input type="text" id="user-name" name="name" placeholder="John Doe" required
                                 class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-pink-500/50 focus:ring-1 focus:ring-pink-500/30 transition-all duration-200">
                         </div>
 
+                        <!-- Email Address -->
                         <div>
-                            <label for="user-email" class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Email Address</label>
+                            <label for="user-email"
+                                class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Email
+                                Address</label>
                             <input type="email" id="user-email" name="email" placeholder="johndoe@example.com" required
                                 class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-pink-500/50 focus:ring-1 focus:ring-pink-500/30 transition-all duration-200">
                         </div>
 
+                        <!-- Phone Number with Prefix Component -->
                         <div>
-                            <label for="user-phone" class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Phone Number</label>
-                            <div class="flex rounded-xl border border-white/10 bg-black/30 overflow-hidden focus-within:border-pink-500/50 focus-within:ring-1 focus-within:ring-pink-500/30 transition-all duration-200">
-                                <span class="flex items-center justify-center px-4 bg-white/5 border-r border-white/10 text-gray-400 font-medium select-none text-sm md:text-base tracking-wide">
+                            <label for="user-phone"
+                                class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Phone
+                                Number</label>
+                            <div
+                                class="flex rounded-xl border border-white/10 bg-black/30 overflow-hidden focus-within:border-pink-500/50 focus-within:ring-1 focus-within:ring-pink-500/30 transition-all duration-200">
+                                <span
+                                    class="flex items-center justify-center px-4 bg-white/5 border-r border-white/10 text-gray-400 font-medium select-none text-sm md:text-base tracking-wide">
                                     +91
                                 </span>
-                                <input type="tel" id="user-phone" name="phone" placeholder="9876543210" pattern="[0-9]{10}" required
+                                <input type="tel" id="user-phone" name="phone" placeholder="9876543210"
+                                    pattern="[0-9]{10}" required
                                     class="w-full bg-transparent px-4 py-3 text-white placeholder-gray-500 focus:outline-none text-sm md:text-base">
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Action Button Layer -->
                 <div class="text-center pt-4">
                     <button type="submit" id="pay-btn"
                         class="w-full md:w-auto md:px-12 py-4 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-pink-500/20 transform hover:-translate-y-0.5 transition-all duration-200 tracking-wide">
@@ -148,9 +180,11 @@
 
             </form>
         </div>
-    </main>
-
+    </main>\
+    
+    <!-- Razorpay Checkout Script -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <script src="payment-script.js"></script>
 </body>
 
