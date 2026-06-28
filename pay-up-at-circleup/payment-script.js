@@ -1,10 +1,10 @@
 /* ==========================================================================
-   CircleUp - Payment Gateway & Animation Logic
+   CircleUp - Ultimate Payment Gateway, Inventory & Interactive UI Engine
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- 1. Background Animation Engine (Preserved) ---
+    // --- 1. Background Visual Engine Setup (ThreeJS) ---
     const canvas = document.getElementById('bg-canvas');
     if (canvas) {
         canvas.style.setProperty('position', 'fixed', 'important');
@@ -73,49 +73,156 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 2. Razorpay Integration Logic ---
+
+    // --- 2. Live Ticket Inventory Counter Manager ---
+    const defaultInventory = {
+        early_bird_female: 3,
+        early_bird_male: 3,
+        regular_female: 2,
+        regular_male: 2
+    };
+
+    function getInventory() {
+        const stored = localStorage.getItem('circleup_ticket_counts');
+        if (!stored) {
+            localStorage.setItem('circleup_ticket_counts', JSON.stringify(defaultInventory));
+            return defaultInventory;
+        }
+        return JSON.parse(stored);
+    }
+
+    function updateInventoryUI() {
+        const currentStock = getInventory();
+        
+        for (const [ticketKey, availableCount] of Object.entries(currentStock)) {
+            const displaySpan = document.getElementById(`count-${ticketKey}`);
+            const targetRow = document.getElementById(`row-${ticketKey}`);
+            const targetRadio = targetRow ? targetRow.querySelector('input[type="radio"]') : null;
+
+            if (displaySpan) {
+                if (availableCount > 0) {
+                    displaySpan.textContent = `${availableCount} left`;
+                    displaySpan.className = "p-3 md:p-4 text-center text-gray-400 font-mono count-display";
+                } else {
+                    displaySpan.textContent = "Sold Out";
+                    displaySpan.className = "p-3 md:p-4 text-center text-red-500 font-semibold count-display";
+                    
+                    if (targetRow) {
+                        targetRow.classList.add('opacity-40', 'cursor-not-allowed');
+                        targetRow.classList.remove('hover:bg-white/5', 'cursor-pointer', 'bg-pink-500/10', 'border-pink-500/40');
+                    }
+                    if (targetRadio) {
+                        targetRadio.disabled = true;
+                        if (targetRadio.checked) targetRadio.checked = false;
+                    }
+                }
+            }
+        }
+    }
+
+    function deductTicketStock(ticketKey) {
+        const currentStock = getInventory();
+        if (currentStock[ticketKey] > 0) {
+            currentStock[ticketKey] -= 1;
+            localStorage.setItem('circleup_ticket_counts', JSON.stringify(currentStock));
+            updateInventoryUI();
+            updateRowStyles();
+        }
+    }
+
+
+    // --- 3. Robust Interactive Row-Selection Component ---
+    function updateRowStyles() {
+        document.querySelectorAll('.ticket-row').forEach(r => {
+            const radio = r.querySelector('input[type="radio"]');
+            
+            if (radio && radio.checked) {
+                // Highlight selected row with an explicit visual glow layout
+                r.classList.add('bg-pink-500/10', 'border-pink-500/40');
+                r.classList.remove('hover:bg-white/5');
+            } else {
+                // Reset unselected rows back to default base state templates
+                r.classList.remove('bg-pink-500/10', 'border-pink-500/40');
+                if (radio && !radio.disabled) {
+                    r.classList.add('hover:bg-white/5');
+                }
+            }
+        });
+    }
+
+    document.querySelectorAll('.ticket-row').forEach(row => {
+        row.addEventListener('click', (event) => {
+            const radio = row.querySelector('input[type="radio"]');
+            
+            // Abort configuration changes if the category option is locked out
+            if (!radio || radio.disabled) return;
+            
+            // If the user fires a direct click clean onto the radio dot, step back and update style metrics natively
+            if (event.target === radio) {
+                updateRowStyles();
+                return;
+            }
+            
+            // Force programmatic radio selection toggle
+            radio.checked = true;
+            
+            // Dispatch native state execution trigger flags out to form wrapper
+            radio.dispatchEvent(new Event('change', { bubbles: true }));
+            
+            updateRowStyles();
+        });
+    });
+
+    // Sync any explicit manual click interaction on radio buttons
+    document.querySelectorAll('input[name="ticket_type"]').forEach(radio => {
+        radio.addEventListener('change', updateRowStyles);
+    });
+
+    // Run layout visual initialization routines
+    updateInventoryUI();
+    updateRowStyles();
+
+
+    // --- 4. Live Razorpay Payment Engine Pipeline ---
     const paymentForm = document.getElementById('payment-form');
     
     if (paymentForm) {
         paymentForm.addEventListener('submit', function (e) {
-            e.preventDefault(); // Stop form from reloading the page
+            e.preventDefault();
 
-            // Get selected ticket element
             const selectedTicket = document.querySelector('input[name="ticket_type"]:checked');
             if (!selectedTicket) {
-                alert('Please select a ticket type before proceeding.');
+                alert('Please pick an available ticket from the options above.');
                 return;
             }
 
-            // Extract ticket details
-            const ticketValue = selectedTicket.value; // e.g., "early_bird_female"
-            const ticketPriceINR = parseInt(selectedTicket.getAttribute('data-price'), 10); // e.g., 1000
-            const ticketLabel = selectedTicket.closest('tr').querySelector('td:nth-child(2)').textContent.trim(); // e.g., "Early Bird (Female)"
+            const ticketValue = selectedTicket.value; 
+            const ticketPriceINR = parseInt(selectedTicket.getAttribute('data-price'), 10);
+            const ticketLabel = selectedTicket.closest('tr').querySelector('.ticket-label').textContent.trim();
 
-            // Extract contact details
+            const activeStock = getInventory();
+            if (activeStock[ticketValue] <= 0) {
+                alert(`Sorry, ${ticketLabel} tickets are completely sold out!`);
+                return;
+            }
+
             const userName = document.getElementById('user-name').value.trim();
             const userEmail = document.getElementById('user-email').value.trim();
             const userPhoneRaw = document.getElementById('user-phone').value.trim();
-            const userPhoneWithPrefix = '+91' + userPhoneRaw; // Combines prefix with 10-digit number
+            const userPhoneWithPrefix = '+91' + userPhoneRaw;
 
-            // Razorpay accepts amounts in the smallest currency unit (Paise for INR). 
-            // e.g., ₹1,000 = 100000 Paise.
             const amountInPaise = ticketPriceINR * 100;
 
-            // Configure Razorpay Options
             const options = {
-                "key": "YOUR_RAZORPAY_KEY_ID", // Replace with your actual Razorpay Key ID
+                "key": "rzp_live_T6j4wLEK2w7G6B", 
                 "amount": amountInPaise,
                 "currency": "INR",
                 "name": "CircleUp",
-                "description": `1x ${ticketLabel} Ticket`,
-                "image": "../images/logos/Circle-up-logo-3D.png", // Paths to your hosted dashboard logo
+                "description": `1x ${ticketLabel} Entry Ticket`,
+                "image": "../images/logos/Circle-up-logo-3D.png",
                 "handler": function (response) {
-                    // This function executes inside the client browser upon successful payment capture
-                    alert(`Payment Successful!\nPayment ID: ${response.razorpay_payment_id}`);
-                    
-                    // You can redirect to a success page or send details to your email/database webhook here:
-                    // window.location.href = "/payment-success/";
+                    alert(`🎉 Payment Confirmed!\nTransaction ID: ${response.razorpay_payment_id}\nYour registration is locked.`);
+                    deductTicketStock(ticketValue);
                 },
                 "prefill": {
                     "name": userName,
@@ -123,20 +230,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     "contact": userPhoneWithPrefix
                 },
                 "notes": {
-                    "ticket_type": ticketLabel,
-                    "system_sku": ticketValue,
-                    "quantity": "1"
+                    "event_category": "CircleUp IRL Gathering",
+                    "chosen_ticket": ticketLabel,
+                    "ticket_sku": ticketValue,
+                    "max_limit_per_payment": "1"
                 },
                 "theme": {
-                    "color": "#ff007f" // Matches your custom hot pink branding color
+                    "color": "#ff007f" 
                 }
             };
 
-            // Instantiate and open the Checkout modal
             const rzp = new Razorpay(options);
             
             rzp.on('payment.failed', function (response) {
-                alert(`Payment Failed. Reason: ${response.error.description}`);
+                alert(`Transaction Incomplete. Context: ${response.error.description}`);
             });
 
             rzp.open();
