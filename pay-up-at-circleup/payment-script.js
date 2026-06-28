@@ -253,7 +253,24 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (rpcError) throw rpcError;
 
                         if (isSuccess) {
-                            alert(`🎉 Payment Confirmed!\nTransaction ID: ${response.razorpay_payment_id}\nYour registration is successfully locked into the database.`);
+                            // Map transaction dataset fields onto the custom UI receipt elements
+                            document.getElementById('modal-name').textContent = userName;
+                            document.getElementById('modal-email').textContent = userEmail;
+                            document.getElementById('modal-ticket').textContent = ticketLabel;
+                            document.getElementById('modal-amount').textContent = `₹${verifiedTicketInfo.price.toLocaleString('en-IN')}`;
+                            document.getElementById('modal-payment-id').textContent = response.razorpay_payment_id;
+
+                            // Unhide the structural overlay card layer cleanly using flex alignments
+                            const receiptModal = document.getElementById('transaction-modal');
+                            if (receiptModal) {
+                                receiptModal.classList.remove('hidden');
+                                receiptModal.classList.add('flex');
+                            }
+
+                            // Force browser refresh once user acknowledges data context closure
+                            document.getElementById('modal-close-btn').onclick = function () {
+                                window.location.reload();
+                            };
                         } else {
                             alert('Transaction error: Tickets became sold out during processing. Please contact support immediately for a refund.');
                         }
