@@ -1,10 +1,17 @@
 /* ==========================================================================
-   CircleUp - Ultimate Payment Gateway, Inventory & Interactive UI Engine
+   CircleUp - Supabase Secure Transactional Dynamic Pricing Engine
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- 1. Background Visual Engine Setup (ThreeJS) ---
+    // --- 1. Supabase Client Configurations ---
+    const SUPABASE_URL = 'https://gouqpxzehiuxzinvcavh.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdvdXFweHplaGl1eHppbnZjYXZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MTgxMTEsImV4cCI6MjA5NDA5NDExMX0.trhLEhq04vP3_-ekfWETyXWZmat3sLiVO750KUmJwhg';
+    
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let cachedInventory = {};
+
+    // --- 2. Background Visual Engine Setup (ThreeJS) ---
     const canvas = document.getElementById('bg-canvas');
     if (canvas) {
         canvas.style.setProperty('position', 'fixed', 'important');
@@ -73,79 +80,101 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- 3. Cloud Database Inventory & Pricing Management Engine ---
+    async function fetchInventoryFromCloud() {
+        try {
+            // Securely fetching both availability limits AND pricing rows from Supabase
+            const { data, error } = await supabaseClient
+                .from('ticket_inventory')
+                .select('ticket_key, available_count, price');
 
-    // --- 2. Live Ticket Inventory Counter Manager ---
-    const defaultInventory = {
-        early_bird_female: 3,
-        early_bird_male: 3,
-        regular_female: 2,
-        regular_male: 2
-    };
+            if (error) throw error;
 
-    function getInventory() {
-        const stored = localStorage.getItem('circleup_ticket_counts');
-        if (!stored) {
-            localStorage.setItem('circleup_ticket_counts', JSON.stringify(defaultInventory));
-            return defaultInventory;
+            data.forEach(item => {
+                cachedInventory[item.ticket_key] = {
+                    count: item.available_count,
+                    price: item.price
+                };
+            });
+
+            updateInventoryUI();
+        } catch (err) {
+            console.error('Error loading config rows from Supabase:', err.message);
         }
-        return JSON.parse(stored);
     }
 
     function updateInventoryUI() {
-        const currentStock = getInventory();
-        
-        for (const [ticketKey, availableCount] of Object.entries(currentStock)) {
-            const displaySpan = document.getElementById(`count-${ticketKey}`);
+        for (const [ticketKey, info] of Object.entries(cachedInventory)) {
+            const countSpan = document.getElementById(`count-${ticketKey}`);
+            const priceSpan = document.getElementById(`price-${ticketKey}`);
             const targetRow = document.getElementById(`row-${ticketKey}`);
             const targetRadio = targetRow ? targetRow.querySelector('input[type="radio"]') : null;
 
-            if (displaySpan) {
-                if (availableCount > 0) {
-                    displaySpan.textContent = `${availableCount} left`;
-                    displaySpan.className = "p-3 md:p-4 text-center text-gray-400 font-mono count-display";
+            // Render prices dynamically from database records
+            if (priceSpan) {
+                priceSpan.textContent = `\u20B9${info.price.toLocaleString('en-IN')}`;
+            }
+
+            // Render remaining ticket seats dynamically
+            if (countSpan) {
+                if (info.count > 0) {
+                    countSpan.textContent = `${info.count} left`;
+                    countSpan.className = "p-3 md:p-4 text-center text-gray-400 font-mono count-display";
+                    
+                    if (targetRow) {
+                        targetRow.classList.remove('opacity-40', 'cursor-not-allowed');
+                    }
+                    if (targetRadio) targetRadio.disabled = false;
                 } else {
-                    displaySpan.textContent = "Sold Out";
-                    displaySpan.className = "p-3 md:p-4 text-center text-red-500 font-semibold count-display";
+                    countSpan.textContent = "Sold Out";
+                    countSpan.className = "p-3 md:p-4 text-center text-red-500 font-semibold count-display";
                     
                     if (targetRow) {
                         targetRow.classList.add('opacity-40', 'cursor-not-allowed');
-                        targetRow.classList.remove('hover:bg-white/5', 'cursor-pointer', 'bg-pink-500/10', 'border-pink-500/40');
+                        targetRow.classList.remove('bg-pink-500/10', 'border-pink-500/40');
                     }
                     if (targetRadio) {
                         targetRadio.disabled = true;
-                        if (targetRadio.checked) targetRadio.checked = false;
+                        if (targetRadio.checked) {
+                            targetRadio.checked = false;
+                            updateRowStyles();
+                        }
                     }
                 }
             }
         }
     }
 
-    function deductTicketStock(ticketKey) {
-        const currentStock = getInventory();
-        if (currentStock[ticketKey] > 0) {
-            currentStock[ticketKey] -= 1;
-            localStorage.setItem('circleup_ticket_counts', JSON.stringify(currentStock));
-            updateInventoryUI();
-            updateRowStyles();
-        }
+    // Realtime Sync Subscription Channel
+    function initializeRealtimeSync() {
+        supabaseClient
+            .channel('live-inventory-tracker')
+            .on(
+                'postgres_changes', 
+                { event: 'UPDATE', schema: 'public', table: 'ticket_inventory' }, 
+                (payload) => {
+                    const updatedRow = payload.new;
+                    if (updatedRow && updatedRow.ticket_key) {
+                        cachedInventory[updatedRow.ticket_key] = {
+                            count: updatedRow.available_count,
+                            price: updatedRow.price
+                        };
+                        updateInventoryUI();
+                        updateRowStyles();
+                    }
+                }
+            )
+            .subscribe();
     }
 
-
-    // --- 3. Robust Interactive Row-Selection Component ---
+    // --- 4. Interactive UI Styling Components ---
     function updateRowStyles() {
         document.querySelectorAll('.ticket-row').forEach(r => {
             const radio = r.querySelector('input[type="radio"]');
-            
             if (radio && radio.checked) {
-                // Highlight selected row with an explicit visual glow layout
                 r.classList.add('bg-pink-500/10', 'border-pink-500/40');
-                r.classList.remove('hover:bg-white/5');
             } else {
-                // Reset unselected rows back to default base state templates
                 r.classList.remove('bg-pink-500/10', 'border-pink-500/40');
-                if (radio && !radio.disabled) {
-                    r.classList.add('hover:bg-white/5');
-                }
             }
         });
     }
@@ -153,41 +182,25 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.ticket-row').forEach(row => {
         row.addEventListener('click', (event) => {
             const radio = row.querySelector('input[type="radio"]');
-            
-            // Abort configuration changes if the category option is locked out
             if (!radio || radio.disabled) return;
-            
-            // If the user fires a direct click clean onto the radio dot, step back and update style metrics natively
             if (event.target === radio) {
                 updateRowStyles();
                 return;
             }
-            
-            // Force programmatic radio selection toggle
             radio.checked = true;
-            
-            // Dispatch native state execution trigger flags out to form wrapper
-            radio.dispatchEvent(new Event('change', { bubbles: true }));
-            
             updateRowStyles();
         });
     });
 
-    // Sync any explicit manual click interaction on radio buttons
     document.querySelectorAll('input[name="ticket_type"]').forEach(radio => {
         radio.addEventListener('change', updateRowStyles);
     });
 
-    // Run layout visual initialization routines
-    updateInventoryUI();
-    updateRowStyles();
-
-
-    // --- 4. Live Razorpay Payment Engine Pipeline ---
+    // --- 5. Razorpay Transaction & Secure Database Storage Pipeline ---
     const paymentForm = document.getElementById('payment-form');
     
     if (paymentForm) {
-        paymentForm.addEventListener('submit', function (e) {
+        paymentForm.addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const selectedTicket = document.querySelector('input[name="ticket_type"]:checked');
@@ -197,12 +210,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const ticketValue = selectedTicket.value; 
-            const ticketPriceINR = parseInt(selectedTicket.getAttribute('data-price'), 10);
             const ticketLabel = selectedTicket.closest('tr').querySelector('.ticket-label').textContent.trim();
 
-            const activeStock = getInventory();
-            if (activeStock[ticketValue] <= 0) {
-                alert(`Sorry, ${ticketLabel} tickets are completely sold out!`);
+            // Pull fresh price context verified straight out of database cache state
+            const verifiedTicketInfo = cachedInventory[ticketValue];
+            if (!verifiedTicketInfo || verifiedTicketInfo.count <= 0) {
+                alert(`Sorry, ${ticketLabel} tickets just sold out!`);
                 return;
             }
 
@@ -211,18 +224,43 @@ document.addEventListener('DOMContentLoaded', () => {
             const userPhoneRaw = document.getElementById('user-phone').value.trim();
             const userPhoneWithPrefix = '+91' + userPhoneRaw;
 
-            const amountInPaise = ticketPriceINR * 100;
+            // Compute exact cost in lower currency denominations (Paise)
+            const amountInPaise = verifiedTicketInfo.price * 100;
 
             const options = {
-                "key": "rzp_live_T6j4wLEK2w7G6B", 
+                "key": "rzp_live_T6j4wLEK2w7G6B", // Your public key identifier
                 "amount": amountInPaise,
                 "currency": "INR",
                 "name": "CircleUp",
                 "description": `1x ${ticketLabel} Entry Ticket`,
                 "image": "../images/logos/Circle-up-logo-3D.png",
-                "handler": function (response) {
-                    alert(`🎉 Payment Confirmed!\nTransaction ID: ${response.razorpay_payment_id}\nYour registration is locked.`);
-                    deductTicketStock(ticketValue);
+                "handler": async function (response) {
+                    
+                    // Capture payment data context and pipe it into our transaction function
+                    try {
+                        const mockOrderId = "ORD-" + Math.random().toString(36).substr(2, 9).toUpperCase();
+
+                        const { data: isSuccess, error: rpcError } = await supabaseClient
+                            .rpc('process_secure_registration', {
+                                target_ticket_key: ticketValue,
+                                p_name: userName,
+                                p_email: userEmail,
+                                p_phone: userPhoneWithPrefix,
+                                p_razorpay_id: response.razorpay_payment_id,
+                                p_order_id: response.razorpay_order_id || mockOrderId
+                            });
+
+                        if (rpcError) throw rpcError;
+
+                        if (isSuccess) {
+                            alert(`🎉 Payment Confirmed!\nTransaction ID: ${response.razorpay_payment_id}\nYour registration is successfully locked into the database.`);
+                        } else {
+                            alert('Transaction error: Tickets became sold out during processing. Please contact support immediately for a refund.');
+                        }
+                    } catch (dbErr) {
+                        console.error('Critical database execution mapping crash:', dbErr.message);
+                        alert('Payment was successful, but database mapping encountered an issue. Please contact support with your Payment ID.');
+                    }
                 },
                 "prefill": {
                     "name": userName,
@@ -232,8 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 "notes": {
                     "event_category": "CircleUp IRL Gathering",
                     "chosen_ticket": ticketLabel,
-                    "ticket_sku": ticketValue,
-                    "max_limit_per_payment": "1"
+                    "ticket_sku": ticketValue
                 },
                 "theme": {
                     "color": "#ff007f" 
@@ -241,12 +278,14 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             const rzp = new Razorpay(options);
-            
             rzp.on('payment.failed', function (response) {
                 alert(`Transaction Incomplete. Context: ${response.error.description}`);
             });
-
             rzp.open();
         });
     }
+
+    // Execute application build instructions
+    fetchInventoryFromCloud();
+    initializeRealtimeSync();
 });
