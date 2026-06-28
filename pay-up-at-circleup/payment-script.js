@@ -83,7 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 3. Cloud Database Inventory & Pricing Management Engine ---
     async function fetchInventoryFromCloud() {
         try {
-            // Securely fetching both availability limits AND pricing rows from Supabase
             const { data, error } = await supabaseClient
                 .from('ticket_inventory')
                 .select('ticket_key, available_count, price');
@@ -110,12 +109,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const targetRow = document.getElementById(`row-${ticketKey}`);
             const targetRadio = targetRow ? targetRow.querySelector('input[type="radio"]') : null;
 
-            // Render prices dynamically from database records
             if (priceSpan) {
                 priceSpan.textContent = `\u20B9${info.price.toLocaleString('en-IN')}`;
             }
 
-            // Render remaining ticket seats dynamically
             if (countSpan) {
                 if (info.count > 0) {
                     countSpan.textContent = `${info.count} left`;
@@ -145,7 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Realtime Sync Subscription Channel
     function initializeRealtimeSync() {
         supabaseClient
             .channel('live-inventory-tracker')
@@ -198,6 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 5. Razorpay Transaction & Secure Database Storage Pipeline ---
     const paymentForm = document.getElementById('payment-form');
+    const payBtn = document.getElementById('pay-btn');
     
     if (paymentForm) {
         paymentForm.addEventListener('submit', async function (e) {
@@ -212,97 +209,108 @@ document.addEventListener('DOMContentLoaded', () => {
             const ticketValue = selectedTicket.value; 
             const ticketLabel = selectedTicket.closest('tr').querySelector('.ticket-label').textContent.trim();
 
-            // Pull fresh price context verified straight out of database cache state
-            const verifiedTicketInfo = cachedInventory[ticketValue];
-            if (!verifiedTicketInfo || verifiedTicketInfo.count <= 0) {
-                alert(`Sorry, ${ticketLabel} tickets just sold out!`);
-                return;
-            }
-
             const userName = document.getElementById('user-name').value.trim();
             const userEmail = document.getElementById('user-email').value.trim();
             const userPhoneRaw = document.getElementById('user-phone').value.trim();
             const userPhoneWithPrefix = '+91' + userPhoneRaw;
 
-            // Compute exact cost in lower currency denominations (Paise)
-            const amountInPaise = verifiedTicketInfo.price * 100;
+            // Freeze the form button and display status feedback
+            payBtn.disabled = true;
+            payBtn.innerText = "Initializing Secure Checkout...";
 
-            const options = {
-                "key": "rzp_live_T6j4wLEK2w7G6B", // Your public key identifier
-                "amount": amountInPaise,
-                "currency": "INR",
-                "name": "CircleUp",
-                "description": `1x ${ticketLabel} Entry Ticket`,
-                "image": "../images/logos/Circle-up-logo-3D.png",
-                "handler": async function (response) {
-                    
-                    // Capture payment data context and pipe it into our transaction function
-                    try {
-                        const mockOrderId = "ORD-" + Math.random().toString(36).substr(2, 9).toUpperCase();
+            try {
+                // CALL THE SECURE EDGE FUNCTION TO CONSTRUCT TAMPER-PROOF ORDER CONTEXT
+                const { data, error: functionError } = await supabaseClient.functions.invoke('create-razorpay-order', {
+                    body: { ticket_key: ticketValue }
+                });
 
-                        const { data: isSuccess, error: rpcError } = await supabaseClient
-                            .rpc('process_secure_registration', {
-                                target_ticket_key: ticketValue,
-                                p_name: userName,
-                                p_email: userEmail,
-                                p_phone: userPhoneWithPrefix,
-                                p_razorpay_id: response.razorpay_payment_id,
-                                p_order_id: response.razorpay_order_id || mockOrderId
-                            });
-
-                        if (rpcError) throw rpcError;
-
-                        if (isSuccess) {
-                            // Map transaction dataset fields onto the custom UI receipt elements
-                            document.getElementById('modal-name').textContent = userName;
-                            document.getElementById('modal-email').textContent = userEmail;
-                            document.getElementById('modal-ticket').textContent = ticketLabel;
-                            document.getElementById('modal-amount').textContent = `₹${verifiedTicketInfo.price.toLocaleString('en-IN')}`;
-                            document.getElementById('modal-payment-id').textContent = response.razorpay_payment_id;
-
-                            // Unhide the structural overlay card layer cleanly using flex alignments
-                            const receiptModal = document.getElementById('transaction-modal');
-                            if (receiptModal) {
-                                receiptModal.classList.remove('hidden');
-                                receiptModal.classList.add('flex');
-                            }
-
-                            // Force browser refresh once user acknowledges data context closure
-                            document.getElementById('modal-close-btn').onclick = function () {
-                                window.location.reload();
-                            };
-                        } else {
-                            alert('Transaction error: Tickets became sold out during processing. Please contact support immediately for a refund.');
-                        }
-                    } catch (dbErr) {
-                        console.error('Critical database execution mapping crash:', dbErr.message);
-                        alert('Payment was successful, but database mapping encountered an issue. Please contact support with your Payment ID.');
-                    }
-                },
-                "prefill": {
-                    "name": userName,
-                    "email": userEmail,
-                    "contact": userPhoneWithPrefix
-                },
-                "notes": {
-                    "event_category": "CircleUp IRL Gathering",
-                    "chosen_ticket": ticketLabel,
-                    "ticket_sku": ticketValue
-                },
-                "theme": {
-                    "color": "#ff007f" 
+                if (functionError || !data?.order_id) {
+                    throw new Error(functionError ? functionError.message : 'Missing secure Order ID registration.');
                 }
-            };
 
-            const rzp = new Razorpay(options);
-            rzp.on('payment.failed', function (response) {
-                alert(`Transaction Incomplete. Context: ${response.error.description}`);
-            });
-            rzp.open();
+                // Configuration parameters safely locked in by backend values
+                const options = {
+                    "key": "rzp_live_T6j4wLEK2w7G6B", 
+                    "amount": data.amount,          // Locked to the order id structure
+                    "order_id": data.order_id,      // BINDING INSTRUMENT: Stops client-side value modification dead
+                    "currency": "INR",
+                    "name": "CircleUp",
+                    "description": `1x ${ticketLabel} Entry Ticket`,
+                    "image": "../images/logos/Circle-up-logo-3D.png",
+                    "handler": async function (response) {
+                        payBtn.innerText = "Finalizing Reservation...";
+                        
+                        try {
+                            const { data: isSuccess, error: rpcError } = await supabaseClient
+                                .rpc('process_secure_registration', {
+                                    target_ticket_key: ticketValue,
+                                    p_name: userName,
+                                    p_email: userEmail,
+                                    p_phone: userPhoneWithPrefix,
+                                    p_razorpay_id: response.razorpay_payment_id,
+                                    p_order_id: response.razorpay_order_id // Send official verified Razorpay Order token
+                                });
+
+                            if (rpcError) throw rpcError;
+
+                            if (isSuccess) {
+                                document.getElementById('modal-name').textContent = userName;
+                                document.getElementById('modal-email').textContent = userEmail;
+                                document.getElementById('modal-ticket').textContent = ticketLabel;
+                                document.getElementById('modal-amount').textContent = `₹${(data.amount / 100).toLocaleString('en-IN')}`;
+                                document.getElementById('modal-payment-id').textContent = response.razorpay_payment_id;
+
+                                const receiptModal = document.getElementById('transaction-modal');
+                                if (receiptModal) {
+                                    receiptModal.classList.remove('hidden');
+                                    receiptModal.classList.add('flex');
+                                }
+
+                                document.getElementById('modal-close-btn').onclick = function () {
+                                    window.location.reload();
+                                };
+                            } else {
+                                alert('Transaction error: Seats filled during checkout processing. Contact support for immediate help.');
+                                window.location.reload();
+                            }
+                        } catch (dbErr) {
+                            console.error('Database entry execution mapping failure:', dbErr.message);
+                            alert('Payment successful, but database allocation failed. Contact support with your Payment ID.');
+                            window.location.reload();
+                        }
+                    },
+                    "prefill": {
+                        "name": userName,
+                        "email": userEmail,
+                        "contact": userPhoneWithPrefix
+                    },
+                    "notes": {
+                        "event_category": "CircleUp IRL Gathering",
+                        "chosen_ticket": ticketLabel,
+                        "ticket_sku": ticketValue
+                    },
+                    "theme": {
+                        "color": "#ff007f" 
+                    }
+                };
+
+                const rzp = new Razorpay(options);
+                rzp.on('payment.failed', function (response) {
+                    alert(`Transaction Incomplete. Reason: ${response.error.description}`);
+                    payBtn.disabled = false;
+                    payBtn.innerText = "Proceed to Pay";
+                });
+                rzp.open();
+
+            } catch (err) {
+                console.error('Checkout preparation block dropped out:', err.message);
+                alert(`Checkout initialization failed: ${err.message}`);
+                payBtn.disabled = false;
+                payBtn.innerText = "Proceed to Pay";
+            }
         });
     }
 
-    // Execute application build instructions
     fetchInventoryFromCloud();
     initializeRealtimeSync();
 });
