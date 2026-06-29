@@ -45,7 +45,7 @@ serve(async (req) => {
     }
 
     if (inventoryItem.available_count <= 0) {
-      return new Response(JSON.stringify({ error: 'This ticket class is sold out.' }), {
+      return new Response(JSON.stringify({ error: 'Oops! Someone just grabbed the last spot. This ticket class is now full.' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })

@@ -123,3 +123,34 @@ main {
 .animate-slide-up {
     animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* 7. Interactive Secure Payment Trust Badge (Enhanced Clarity & Hover FX) */
+.secure-trust-badge-container {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+    cursor: pointer;
+    text-decoration: none;
+    outline: none;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.secure-trust-badge-container:hover {
+    transform: scale(1.04); /* Tactile click preview physics */
+}
+
+.razorpay-trust-badge {
+    max-width: 140px;
+    height: auto;
+    opacity: 0.92; /* Brought to near-full opacity by default so it's completely visible */
+    user-select: none;
+    -webkit-user-drag: none;
+    filter: brightness(1.0);
+    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), filter 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.secure-trust-badge-container:hover .razorpay-trust-badge {
+    opacity: 1;
+    filter: brightness(1.4) drop-shadow(0 0 8px rgba(255, 255, 255, 0.15)); /* Elegant lighting boost + micro-glow aura */
+}
