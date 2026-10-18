@@ -311,81 +311,92 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-/* ==========================================================================
-   CircleUp - Dynamic Event Details Modal Engine
-   ========================================================================== */
+    // --- 6. Dynamic Event Details & Visibility Toggle Engine ---
+    const eventModal = document.getElementById('event-details-modal');
+    const openEventBtn = document.getElementById('open-event-btn');
+    const closeEventBtn = document.getElementById('close-event-modal-btn');
+    const dismissEventBtn = document.getElementById('dismiss-event-modal-btn');
 
-    document.addEventListener('DOMContentLoaded', () => {
+    const eventNameEl = document.getElementById('event-modal-name');
+    const eventDateEl = document.getElementById('event-modal-date');
+    const eventTimeEl = document.getElementById('event-modal-time');
+    const eventVenueEl = document.getElementById('event-modal-venue');
 
-        // Elements
-        const eventModal = document.getElementById('event-details-modal');
-        const openEventBtn = document.getElementById('open-event-btn');
-        const closeEventBtn = document.getElementById('close-event-modal-btn');
-        const dismissEventBtn = document.getElementById('dismiss-event-modal-btn');
+    const paymentWrapper = document.getElementById('payment-content-wrapper');
+    const constructionWrapper = document.getElementById('construction-wrapper');
 
-        const eventNameEl = document.getElementById('event-modal-name');
-        const eventDateEl = document.getElementById('event-modal-date');
-        const eventTimeEl = document.getElementById('event-modal-time');
-        const eventVenueEl = document.getElementById('event-modal-venue');
+    let eventDataCached = null;
 
-        let eventDataCached = null;
+    async function loadEventDetails() {
+        try {
+            const response = await fetch('event-details.json');
+            if (!response.ok) throw new Error('Failed to load event details JSON');
+            eventDataCached = await response.json();
 
-        // Fetch details from JSON
-        async function loadEventDetails() {
-            try {
-                const response = await fetch('event-details.json');
-                if (!response.ok) throw new Error('Failed to load event details JSON');
-                eventDataCached = await response.json();
+            if (eventNameEl) eventNameEl.textContent = eventDataCached.eventName;
+            if (eventDateEl) eventDateEl.textContent = eventDataCached.date;
+            if (eventTimeEl) eventTimeEl.textContent = eventDataCached.time;
+            if (eventVenueEl) eventVenueEl.textContent = eventDataCached.venue;
 
-                if (eventNameEl) eventNameEl.textContent = eventDataCached.eventName;
-                if (eventDateEl) eventDateEl.textContent = eventDataCached.date;
-                if (eventTimeEl) eventTimeEl.textContent = eventDataCached.time;
-                if (eventVenueEl) eventVenueEl.textContent = eventDataCached.venue;
-            } catch (err) {
-                console.error('Error fetching event details:', err);
-                // Fallback content in case JSON fetch fails
-                if (eventNameEl) eventNameEl.textContent = "CircleUp Halloween House Party";
-                if (eventDateEl) eventDateEl.textContent = "31 October 2026";
-                if (eventTimeEl) eventTimeEl.textContent = "7PM onwards";
-                if (eventVenueEl) eventVenueEl.textContent = "The Collection by BramhaCorp, New Kalyani Nagar";
+            // Toggle page content visibility based on paymentPage flag
+            const isPaymentActive = String(eventDataCached.paymentPage).toLowerCase() === 'true';
+
+            if (!isPaymentActive) {
+                if (paymentWrapper) paymentWrapper.classList.add('hidden');
+                if (constructionWrapper) {
+                    constructionWrapper.classList.remove('hidden');
+                    constructionWrapper.classList.add('block');
+                }
+            } else {
+                if (paymentWrapper) paymentWrapper.classList.remove('hidden');
+                if (constructionWrapper) {
+                    constructionWrapper.classList.add('hidden');
+                    constructionWrapper.classList.remove('block');
+                }
             }
+
+        } catch (err) {
+            console.error('Error fetching event details:', err);
+            if (eventNameEl) eventNameEl.textContent = "CircleUp Halloween House Party";
+            if (eventDateEl) eventDateEl.textContent = "31 October 2026";
+            if (eventTimeEl) eventTimeEl.textContent = "7PM onwards";
+            if (eventVenueEl) eventVenueEl.textContent = "The Collection by BramhaCorp, New Kalyani Nagar";
         }
+    }
 
-        function openModal() {
-            if (eventModal) {
-                eventModal.classList.remove('hidden');
-                eventModal.classList.add('flex');
-                document.body.style.overflow = 'hidden';
-            }
-        }
-
-        function closeModal() {
-            if (eventModal) {
-                eventModal.classList.add('hidden');
-                eventModal.classList.remove('flex');
-                document.body.style.overflow = 'auto';
-            }
-        }
-
-        if (openEventBtn) openEventBtn.addEventListener('click', openModal);
-        if (closeEventBtn) closeEventBtn.addEventListener('click', closeModal);
-        if (dismissEventBtn) dismissEventBtn.addEventListener('click', closeModal);
-
-        // Close on backdrop click
+    function openModal() {
         if (eventModal) {
-            eventModal.addEventListener('click', (e) => {
-                if (e.target === eventModal) closeModal();
-            });
+            eventModal.classList.remove('hidden');
+            eventModal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
         }
+    }
 
-        // Close on ESC key press
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && eventModal && !eventModal.classList.contains('hidden')) {
-                closeModal();
-            }
+    function closeModal() {
+        if (eventModal) {
+            eventModal.classList.add('hidden');
+            eventModal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+    }
+
+    if (openEventBtn) openEventBtn.addEventListener('click', openModal);
+    if (closeEventBtn) closeEventBtn.addEventListener('click', closeModal);
+    if (dismissEventBtn) dismissEventBtn.addEventListener('click', closeModal);
+
+    if (eventModal) {
+        eventModal.addEventListener('click', (e) => {
+            if (e.target === eventModal) closeModal();
         });
+    }
 
-        loadEventDetails();
-        fetchInventoryFromCloud();
-        initializeRealtimeSync();
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && eventModal && !eventModal.classList.contains('hidden')) {
+            closeModal();
+        }
     });
+
+    loadEventDetails();
+    fetchInventoryFromCloud();
+    initializeRealtimeSync();
+});

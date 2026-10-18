@@ -48,94 +48,113 @@
         </div>
 
         <div class="w-full max-w-3xl space-y-6 animate-slide-up">
-            <form id="payment-form" class="space-y-6">
-                
-                <div class="glass-card rounded-2xl p-5 md:p-6 border border-white/10 shadow-xl">
-                    <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                        <span>🎟️</span> Select Your Ticket
-                    </h2>
+            
+            <!-- 1. ACTIVE PAYMENT FORM -->
+            <div id="payment-content-wrapper">
+                <form id="payment-form" class="space-y-6">
                     
-                    <div class="overflow-x-auto rounded-xl border border-white/5 bg-black/20">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="border-b border-white/10 bg-white/5 text-xs md:text-sm font-semibold tracking-wider text-gray-300">
-                                    <th class="p-3 md:p-4 text-center w-12">Select</th>
-                                    <th class="p-3 md:p-4">Ticket Type</th>
-                                    <th class="p-3 md:p-4 text-center">Tickets Available</th>
-                                    <th class="p-3 md:p-4 text-right">Price</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-xs md:text-sm divide-y divide-white/5">
-                                <tr id="row-early_bird_female" class="ticket-row hover:bg-white/5 transition-colors cursor-pointer">
-                                    <td class="p-3 md:p-4 text-center">
-                                        <input type="radio" id="ticket-early-female" name="ticket_type" value="early_bird_female" class="w-4 h-4 accent-pink-500 cursor-pointer" required>
-                                    </td>
-                                    <td class="p-3 md:p-4 font-medium text-white ticket-label">Early Bird (Female)</td>
-                                    <td class="p-3 md:p-4 text-center text-gray-400 font-mono count-display" id="count-early_bird_female">Loading...</td>
-                                    <td class="p-3 md:p-4 text-right font-semibold text-pink-400 price-display" id="price-early_bird_female">Loading...</td>
-                                </tr>
-                                <tr id="row-early_bird_male" class="ticket-row hover:bg-white/5 transition-colors cursor-pointer">
-                                    <td class="p-3 md:p-4 text-center">
-                                        <input type="radio" id="ticket-early-male" name="ticket_type" value="early_bird_male" class="w-4 h-4 accent-pink-500 cursor-pointer">
-                                    </td>
-                                    <td class="p-3 md:p-4 font-medium text-white ticket-label">Early Bird (Male)</td>
-                                    <td class="p-3 md:p-4 text-center text-gray-400 font-mono count-display" id="count-early_bird_male">Loading...</td>
-                                    <td class="p-3 md:p-4 text-right font-semibold text-pink-400 price-display" id="price-early_bird_male">Loading...</td>
-                                </tr>
-                                <tr id="row-regular_female" class="ticket-row hover:bg-white/5 transition-colors cursor-pointer">
-                                    <td class="p-3 md:p-4 text-center">
-                                        <input type="radio" id="ticket-reg-female" name="ticket_type" value="regular_female" class="w-4 h-4 accent-pink-500 cursor-pointer">
-                                    </td>
-                                    <td class="p-3 md:p-4 font-medium text-white ticket-label">Regular (Female)</td>
-                                    <td class="p-3 md:p-4 text-center text-gray-400 font-mono count-display" id="count-regular_female">Loading...</td>
-                                    <td class="p-3 md:p-4 text-right font-semibold text-pink-400 price-display" id="price-regular_female">Loading...</td>
-                                </tr>
-                                <tr id="row-regular_male" class="ticket-row hover:bg-white/5 transition-colors cursor-pointer">
-                                    <td class="p-3 md:p-4 text-center">
-                                        <input type="radio" id="ticket-reg-male" name="ticket_type" value="regular_male" class="w-4 h-4 accent-pink-500 cursor-pointer">
-                                    </td>
-                                    <td class="p-3 md:p-4 font-medium text-white ticket-label">Regular (Male)</td>
-                                    <td class="p-3 md:p-4 text-center text-gray-400 font-mono count-display" id="count-regular_male">Loading...</td>
-                                    <td class="p-3 md:p-4 text-right font-semibold text-pink-400 price-display" id="price-regular_male">Loading...</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="glass-card rounded-2xl p-5 md:p-6 border border-white/10 shadow-xl">
+                        <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                            <span>🎟️</span> Select Your Ticket
+                        </h2>
+                        
+                        <div class="overflow-x-auto rounded-xl border border-white/5 bg-black/20">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-white/10 bg-white/5 text-xs md:text-sm font-semibold tracking-wider text-gray-300">
+                                        <th class="p-3 md:p-4 text-center w-12">Select</th>
+                                        <th class="p-3 md:p-4">Ticket Type</th>
+                                        <th class="p-3 md:p-4 text-center">Tickets Available</th>
+                                        <th class="p-3 md:p-4 text-right">Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-xs md:text-sm divide-y divide-white/5">
+                                    <tr id="row-early_bird_female" class="ticket-row hover:bg-white/5 transition-colors cursor-pointer">
+                                        <td class="p-3 md:p-4 text-center">
+                                            <input type="radio" id="ticket-early-female" name="ticket_type" value="early_bird_female" class="w-4 h-4 accent-pink-500 cursor-pointer" required>
+                                        </td>
+                                        <td class="p-3 md:p-4 font-medium text-white ticket-label">Early Bird (Female)</td>
+                                        <td class="p-3 md:p-4 text-center text-gray-400 font-mono count-display" id="count-early_bird_female">Loading...</td>
+                                        <td class="p-3 md:p-4 text-right font-semibold text-pink-400 price-display" id="price-early_bird_female">Loading...</td>
+                                    </tr>
+                                    <tr id="row-early_bird_male" class="ticket-row hover:bg-white/5 transition-colors cursor-pointer">
+                                        <td class="p-3 md:p-4 text-center">
+                                            <input type="radio" id="ticket-early-male" name="ticket_type" value="early_bird_male" class="w-4 h-4 accent-pink-500 cursor-pointer">
+                                        </td>
+                                        <td class="p-3 md:p-4 font-medium text-white ticket-label">Early Bird (Male)</td>
+                                        <td class="p-3 md:p-4 text-center text-gray-400 font-mono count-display" id="count-early_bird_male">Loading...</td>
+                                        <td class="p-3 md:p-4 text-right font-semibold text-pink-400 price-display" id="price-early_bird_male">Loading...</td>
+                                    </tr>
+                                    <tr id="row-regular_female" class="ticket-row hover:bg-white/5 transition-colors cursor-pointer">
+                                        <td class="p-3 md:p-4 text-center">
+                                            <input type="radio" id="ticket-reg-female" name="ticket_type" value="regular_female" class="w-4 h-4 accent-pink-500 cursor-pointer">
+                                        </td>
+                                        <td class="p-3 md:p-4 font-medium text-white ticket-label">Regular (Female)</td>
+                                        <td class="p-3 md:p-4 text-center text-gray-400 font-mono count-display" id="count-regular_female">Loading...</td>
+                                        <td class="p-3 md:p-4 text-right font-semibold text-pink-400 price-display" id="price-regular_female">Loading...</td>
+                                    </tr>
+                                    <tr id="row-regular_male" class="ticket-row hover:bg-white/5 transition-colors cursor-pointer">
+                                        <td class="p-3 md:p-4 text-center">
+                                            <input type="radio" id="ticket-reg-male" name="ticket_type" value="regular_male" class="w-4 h-4 accent-pink-500 cursor-pointer">
+                                        </td>
+                                        <td class="p-3 md:p-4 font-medium text-white ticket-label">Regular (Male)</td>
+                                        <td class="p-3 md:p-4 text-center text-gray-400 font-mono count-display" id="count-regular_male">Loading...</td>
+                                        <td class="p-3 md:p-4 text-right font-semibold text-pink-400 price-display" id="price-regular_male">Loading...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
 
-                <div class="glass-card rounded-2xl p-5 md:p-6 border border-white/10 shadow-xl space-y-4">
-                    <h2 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
-                        <span>🔐</span> Contact Details
-                    </h2>
-                    <div class="grid grid-cols-1 gap-4 text-left">
-                        <div>
-                            <label for="user-name" class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Full Name</label>
-                            <input type="text" id="user-name" name="name" placeholder="John Doe" required class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-pink-500/50 focus:ring-1 focus:ring-pink-500/30 transition-all duration-200">
-                        </div>
-                        <div>
-                            <label for="user-email" class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Email Address</label>
-                            <input type="email" id="user-email" name="email" placeholder="johndoe@example.com" required class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-pink-500/50 focus:ring-1 focus:ring-pink-500/30 transition-all duration-200">
-                        </div>
-                        <div>
-                            <label for="user-phone" class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Phone Number</label>
-                            <div class="flex rounded-xl border border-white/10 bg-black/30 overflow-hidden focus-within:border-pink-500/50 focus-within:ring-1 focus-within:ring-pink-500/30 transition-all duration-200">
-                                <span class="flex items-center justify-center px-4 bg-white/5 border-r border-white/10 text-gray-400 font-medium select-none text-sm md:text-base tracking-wide">+91</span>
-                                <input type="tel" id="user-phone" name="phone" placeholder="9876543210" pattern="[0-9]{10}" required class="w-full bg-transparent px-4 py-3 text-white placeholder-gray-500 focus:outline-none text-sm md:text-base">
+                    <div class="glass-card rounded-2xl p-5 md:p-6 border border-white/10 shadow-xl space-y-4">
+                        <h2 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                            <span>🔐</span> Contact Details
+                        </h2>
+                        <div class="grid grid-cols-1 gap-4 text-left">
+                            <div>
+                                <label for="user-name" class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Full Name</label>
+                                <input type="text" id="user-name" name="name" placeholder="John Doe" required class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-pink-500/50 focus:ring-1 focus:ring-pink-500/30 transition-all duration-200">
+                            </div>
+                            <div>
+                                <label for="user-email" class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Email Address</label>
+                                <input type="email" id="user-email" name="email" placeholder="johndoe@example.com" required class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-pink-500/50 focus:ring-1 focus:ring-pink-500/30 transition-all duration-200">
+                            </div>
+                            <div>
+                                <label for="user-phone" class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Phone Number</label>
+                                <div class="flex rounded-xl border border-white/10 bg-black/30 overflow-hidden focus-within:border-pink-500/50 focus-within:ring-1 focus-within:ring-pink-500/30 transition-all duration-200">
+                                    <span class="flex items-center justify-center px-4 bg-white/5 border-r border-white/10 text-gray-400 font-medium select-none text-sm md:text-base tracking-wide">+91</span>
+                                    <input type="tel" id="user-phone" name="phone" placeholder="9876543210" pattern="[0-9]{10}" required class="w-full bg-transparent px-4 py-3 text-white placeholder-gray-500 focus:outline-none text-sm md:text-base">
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="text-center pt-4 flex flex-col items-center justify-center gap-4">
-                    <button type="submit" id="pay-btn" class="w-full md:w-auto md:px-12 py-4 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold text-lg rounded-xl shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 tracking-wide">
-                        Proceed to Pay
-                    </button>
-                    
-                    <a href="https://razorpay.com/terms" target="_blank" rel="noopener noreferrer" class="secure-trust-badge-container block">
-                        <img src="../images/logos/Razorpay-dark-badge.png" alt="Payments Powered by Razorpay" class="razorpay-trust-badge">
+                    <div class="text-center pt-4 flex flex-col items-center justify-center gap-4">
+                        <button type="submit" id="pay-btn" class="w-full md:w-auto md:px-12 py-4 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold text-lg rounded-xl shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 tracking-wide">
+                            Proceed to Pay
+                        </button>
+                        
+                        <a href="https://razorpay.com/terms" target="_blank" rel="noopener noreferrer" class="secure-trust-badge-container block">
+                            <img src="../images/logos/Razorpay-dark-badge.png" alt="Payments Powered by Razorpay" class="razorpay-trust-badge">
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 2. UNDER CONSTRUCTION CONTAINER -->
+            <div id="construction-wrapper" class="hidden glass-card rounded-2xl p-8 md:p-12 border border-white/10 text-center shadow-2xl space-y-4">
+                <div class="text-5xl md:text-6xl mb-2 animate-bounce">🚧</div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">We are constructing our upcoming event!</h2>
+                <p class="text-gray-300 text-sm md:text-base max-w-lg mx-auto leading-relaxed">
+                    Passes for our next gathering are currently being prepared. Check back soon or stay tuned on our WhatsApp group for early announcements!
+                </p>
+                <div class="pt-4">
+                    <a href="https://api.whatsapp.com/send?phone=8217678506&text=Knock%20knock!%0AJust%20landed%20at%20Circle%20Up%20HQ.%20Seeking%20partners%20in%20crime%20and%20good%20vibes%20only%20%E2%9C%A8%0AGot%20room%20for%20one%20more%3F" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-3 bg-green-500/20 hover:bg-green-500/30 border border-green-500/40 rounded-xl text-green-300 text-sm font-semibold transition-all duration-200">
+                        <span>💬</span> Reach out on WhatsApp
                     </a>
                 </div>
-            </form>
+            </div>
+
         </div>
     </main>
 
@@ -148,10 +167,10 @@
                 ✕
             </button>
 
-            <!-- EVENT HEADER -->
-            <div class="pr-8 mb-5">
+            <!-- CENTER ALIGNED EVENT HEADER -->
+            <div class="mb-5 text-center px-4">
                 <span class="text-xs font-semibold text-pink-400 uppercase tracking-widest block mb-1">🎉 Upcoming Gathering</span>
-                <h2 id="event-modal-name" class="text-2xl font-bold text-white leading-tight">Loading...</h2>
+                <h2 id="event-modal-name" class="text-2xl font-bold text-white leading-tight text-center">Loading...</h2>
             </div>
 
             <!-- EVENT DETAILS CONTAINER -->
@@ -227,4 +246,5 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="payment-script.js"></script>
 </body>
+
 </html>
