@@ -322,6 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const eventTimeEl = document.getElementById('event-modal-time');
     const eventVenueEl = document.getElementById('event-modal-venue');
 
+    const heroCard = document.getElementById('hero-card');
     const paymentWrapper = document.getElementById('payment-content-wrapper');
     const constructionWrapper = document.getElementById('construction-wrapper');
 
@@ -342,12 +343,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const isPaymentActive = String(eventDataCached.paymentPage).toLowerCase() === 'true';
 
             if (!isPaymentActive) {
+                if (heroCard) heroCard.classList.add('hidden');
                 if (paymentWrapper) paymentWrapper.classList.add('hidden');
                 if (constructionWrapper) {
                     constructionWrapper.classList.remove('hidden');
                     constructionWrapper.classList.add('block');
                 }
             } else {
+                if (heroCard) heroCard.classList.remove('hidden');
                 if (paymentWrapper) paymentWrapper.classList.remove('hidden');
                 if (constructionWrapper) {
                     constructionWrapper.classList.add('hidden');

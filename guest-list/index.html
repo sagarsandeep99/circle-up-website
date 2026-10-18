@@ -1,38 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- 
+      ==========================================================================
+      CIRCLEUP EVENT CONFIGURATION
+      Update these 4 items whenever you launch a new event link:
+      ==========================================================================
+      1. Line 18 (<title>):                   Browser tab title
+      2. Line 21 (<meta property="og:title">): WhatsApp & Social preview title
+      3. Line 27 (<meta http-equiv="refresh">): Primary Google Form redirect URL
+      4. Line 35 (const GOOGLE_FORM_URL):      Fallback JavaScript redirect URL
+      ==========================================================================
+    -->
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CircleUp | Guest Form</title>
+
+    <!-- 1. BROWSER TAB TITLE -->
+    <title>CircleUp | Halloween Guest Form</title>
+
+    <!-- 2. WHATSAPP & SOCIAL MEDIA PREVIEW CARD TITLE -->
+    <meta property="og:title" content="CircleUp | Halloween Guest Form">
     
-    <!-- Instant Redirect Meta Refresh -->
-    <meta http-equiv="refresh" content="0; url=https://forms.gle/zAsHUNHcTpocX5T5A">
-    
-    <!-- WhatsApp & Social Media Preview Cards -->
-    <meta property="og:title" content="CircleUp Guest Form ✨">
-    <meta property="og:description" content="Fill out the guest form to join us for an upcoming CircleUp experience.">
+    <!-- CANONICAL URL REFERENCE -->
     <meta property="og:url" content="https://circleupirl.com/guest-list">
-    
-    <!-- Dynamic Title Sync & JavaScript Fallback Redirect -->
+
+    <!-- 3. PRIMARY GOOGLE FORM REDIRECT -->
+    <meta http-equiv="refresh" content="0; url=https://forms.gle/zAsHUNHcTpocX5T5A">
+
+    <!-- 4. FALLBACK JAVASCRIPT REDIRECT -->
     <script>
-        // Fetch title dynamically from event-details.json
-        fetch('../pay-up-at-circleup/event-details.json')
-            .then(response => {
-                if (!response.ok) throw new Error('Network response was not ok');
-                return response.json();
-            })
-            .then(data => {
-                if (data && data.guestFormName) {
-                    document.title = data.guestFormName;
-                }
-            })
-            .catch(err => {
-                console.error('Error fetching guestFormName from JSON:', err);
-            })
-            .finally(() => {
-                // Ensure redirect executes reliably after title resolution
-                window.location.href = "https://forms.gle/zAsHUNHcTpocX5T5A";
-            });
+        const GOOGLE_FORM_URL = "https://forms.gle/zAsHUNHcTpocX5T5A";
+        window.location.href = GOOGLE_FORM_URL;
     </script>
 </head>
 <body>
