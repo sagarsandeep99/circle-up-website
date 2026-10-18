@@ -3,11 +3,11 @@
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     // --- 1. Supabase Client Configurations ---
     const SUPABASE_URL = 'https://gouqpxzehiuxzinvcavh.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdvdXFweHplaGl1eHppbnZjYXZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MTgxMTEsImV4cCI6MjA5NDA5NDExMX0.trhLEhq04vP3_-ekfWETyXWZmat3sLiVO750KUmJwhg';
-    
+
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     let cachedInventory = {};
 
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         scene.background = new THREE.Color(0x0f0f1a);
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: false, antialias: true });
-        
+
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
@@ -45,10 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
             mesh.position.x = (Math.random() - 0.5) * 35;
             mesh.position.y = (Math.random() - 0.5) * 22;
             mesh.position.z = (Math.random() - 0.5) * 10 - 5;
-            
+
             const scale = Math.random() * 0.5 + 0.4;
             mesh.scale.set(scale, scale, scale);
-            
+
             mesh.userData = {
                 rotSpeedX: Math.random() * 0.01,
                 rotSpeedY: Math.random() * 0.01,
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (info.count > 0) {
                     countSpan.textContent = `${info.count} left`;
                     countSpan.className = "p-3 md:p-4 text-center text-gray-400 font-mono count-display";
-                    
+
                     if (targetRow) {
                         targetRow.classList.remove('opacity-40', 'cursor-not-allowed');
                     }
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     countSpan.textContent = "Sold Out";
                     countSpan.className = "p-3 md:p-4 text-center text-red-500 font-semibold count-display";
-                    
+
                     if (targetRow) {
                         targetRow.classList.add('opacity-40', 'cursor-not-allowed');
                         targetRow.classList.remove('bg-pink-500/10', 'border-pink-500/40');
@@ -146,8 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
         supabaseClient
             .channel('live-inventory-tracker')
             .on(
-                'postgres_changes', 
-                { event: 'UPDATE', schema: 'public', table: 'ticket_inventory' }, 
+                'postgres_changes',
+                { event: 'UPDATE', schema: 'public', table: 'ticket_inventory' },
                 (payload) => {
                     const updatedRow = payload.new;
                     if (updatedRow && updatedRow.ticket_key) {
@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 5. Razorpay Transaction & Secure Database Storage Pipeline ---
     const paymentForm = document.getElementById('payment-form');
     const payBtn = document.getElementById('pay-btn');
-    
+
     if (paymentForm) {
         paymentForm.addEventListener('submit', async function (e) {
             e.preventDefault();
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            const ticketValue = selectedTicket.value; 
+            const ticketValue = selectedTicket.value;
             const ticketLabel = selectedTicket.closest('tr').querySelector('.ticket-label').textContent.trim();
 
             const userName = document.getElementById('user-name').value.trim();
@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Configuration parameters safely locked in by backend values
                 const options = {
-                    "key": "rzp_live_T6j4wLEK2w7G6B", 
+                    "key": "rzp_live_T6j4wLEK2w7G6B",
                     "amount": data.amount,          // Locked to the order id structure
                     "order_id": data.order_id,      // BINDING INSTRUMENT: Stops client-side value modification dead
                     "currency": "INR",
@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     "image": "../images/logos/Circle-up-logo-3D.png",
                     "handler": async function (response) {
                         payBtn.innerText = "Finalizing Reservation...";
-                        
+
                         try {
                             const { data: isSuccess, error: rpcError } = await supabaseClient
                                 .rpc('process_secure_registration', {
@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         "ticket_sku": ticketValue
                     },
                     "theme": {
-                        "color": "#ff007f" 
+                        "color": "#ff007f"
                     }
                 };
 
@@ -311,6 +311,81 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    fetchInventoryFromCloud();
-    initializeRealtimeSync();
-});
+/* ==========================================================================
+   CircleUp - Dynamic Event Details Modal Engine
+   ========================================================================== */
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // Elements
+        const eventModal = document.getElementById('event-details-modal');
+        const openEventBtn = document.getElementById('open-event-btn');
+        const closeEventBtn = document.getElementById('close-event-modal-btn');
+        const dismissEventBtn = document.getElementById('dismiss-event-modal-btn');
+
+        const eventNameEl = document.getElementById('event-modal-name');
+        const eventDateEl = document.getElementById('event-modal-date');
+        const eventTimeEl = document.getElementById('event-modal-time');
+        const eventVenueEl = document.getElementById('event-modal-venue');
+
+        let eventDataCached = null;
+
+        // Fetch details from JSON
+        async function loadEventDetails() {
+            try {
+                const response = await fetch('event-details.json');
+                if (!response.ok) throw new Error('Failed to load event details JSON');
+                eventDataCached = await response.json();
+
+                if (eventNameEl) eventNameEl.textContent = eventDataCached.eventName;
+                if (eventDateEl) eventDateEl.textContent = eventDataCached.date;
+                if (eventTimeEl) eventTimeEl.textContent = eventDataCached.time;
+                if (eventVenueEl) eventVenueEl.textContent = eventDataCached.venue;
+            } catch (err) {
+                console.error('Error fetching event details:', err);
+                // Fallback content in case JSON fetch fails
+                if (eventNameEl) eventNameEl.textContent = "CircleUp Halloween House Party";
+                if (eventDateEl) eventDateEl.textContent = "31 October 2026";
+                if (eventTimeEl) eventTimeEl.textContent = "7PM onwards";
+                if (eventVenueEl) eventVenueEl.textContent = "The Collection by BramhaCorp, New Kalyani Nagar";
+            }
+        }
+
+        function openModal() {
+            if (eventModal) {
+                eventModal.classList.remove('hidden');
+                eventModal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeModal() {
+            if (eventModal) {
+                eventModal.classList.add('hidden');
+                eventModal.classList.remove('flex');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        if (openEventBtn) openEventBtn.addEventListener('click', openModal);
+        if (closeEventBtn) closeEventBtn.addEventListener('click', closeModal);
+        if (dismissEventBtn) dismissEventBtn.addEventListener('click', closeModal);
+
+        // Close on backdrop click
+        if (eventModal) {
+            eventModal.addEventListener('click', (e) => {
+                if (e.target === eventModal) closeModal();
+            });
+        }
+
+        // Close on ESC key press
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && eventModal && !eventModal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+
+        loadEventDetails();
+        fetchInventoryFromCloud();
+        initializeRealtimeSync();
+    });
