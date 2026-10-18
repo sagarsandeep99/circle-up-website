@@ -80,26 +80,66 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 3. Cloud Database Inventory & Pricing Management Engine ---
+    // --- 3. Cloud Database Inventory & Dynamic Row Renderer ---
     async function fetchInventoryFromCloud() {
         try {
             const { data, error } = await supabaseClient
                 .from('ticket_inventory')
-                .select('ticket_key, available_count, price');
+                .select('ticket_key, ticket_label, available_count, price, is_active')
+                .eq('is_active', true) // Render only active flag rows
+                .order('id', { ascending: true });
 
             if (error) throw error;
 
             data.forEach(item => {
                 cachedInventory[item.ticket_key] = {
+                    label: item.ticket_label,
                     count: item.available_count,
                     price: item.price
                 };
             });
 
-            updateInventoryUI();
+            renderTicketTable(data);
         } catch (err) {
             console.error('Error loading config rows from Supabase:', err.message);
         }
+    }
+
+    function renderTicketTable(tickets) {
+        const container = document.getElementById('ticket-rows-container');
+        if (!container) return;
+
+        container.innerHTML = '';
+
+        tickets.forEach((ticket, index) => {
+            const isSoldOut = ticket.available_count <= 0;
+            const rowClass = isSoldOut ? 'opacity-40 cursor-not-allowed' : 'hover:bg-white/5 cursor-pointer';
+            const countText = isSoldOut ? 'Sold Out' : `${ticket.available_count} left`;
+            const countClass = isSoldOut ? 'text-red-500 font-semibold' : 'text-gray-400 font-mono';
+
+            const tr = document.createElement('tr');
+            tr.id = `row-${ticket.ticket_key}`;
+            tr.className = `ticket-row ${rowClass} transition-colors`;
+            tr.innerHTML = `
+                <td class="p-3 md:p-4 text-center">
+                    <input type="radio" id="ticket-${ticket.ticket_key}" name="ticket_type" value="${ticket.ticket_key}" class="w-4 h-4 accent-pink-500 cursor-pointer" ${isSoldOut ? 'disabled' : ''} ${index === 0 && !isSoldOut ? 'required' : ''}>
+                </td>
+                <td class="p-3 md:p-4 font-medium text-white ticket-label">${ticket.ticket_label}</td>
+                <td class="p-3 md:p-4 text-center ${countClass} count-display" id="count-${ticket.ticket_key}">${countText}</td>
+                <td class="p-3 md:p-4 text-right font-semibold text-pink-400 price-display" id="price-${ticket.ticket_key}">₹${ticket.price.toLocaleString('en-IN')}</td>
+            `;
+
+            tr.addEventListener('click', (e) => {
+                const radio = tr.querySelector('input[type="radio"]');
+                if (!radio || radio.disabled) return;
+                radio.checked = true;
+                updateRowStyles();
+            });
+
+            container.appendChild(tr);
+        });
+
+        updateRowStyles();
     }
 
     function updateInventoryUI() {
@@ -147,17 +187,9 @@ document.addEventListener('DOMContentLoaded', () => {
             .channel('live-inventory-tracker')
             .on(
                 'postgres_changes',
-                { event: 'UPDATE', schema: 'public', table: 'ticket_inventory' },
-                (payload) => {
-                    const updatedRow = payload.new;
-                    if (updatedRow && updatedRow.ticket_key) {
-                        cachedInventory[updatedRow.ticket_key] = {
-                            count: updatedRow.available_count,
-                            price: updatedRow.price
-                        };
-                        updateInventoryUI();
-                        updateRowStyles();
-                    }
+                { event: '*', schema: 'public', table: 'ticket_inventory' },
+                () => {
+                    fetchInventoryFromCloud(); // Re-render table on any schema/data changes
                 }
             )
             .subscribe();
@@ -174,23 +206,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
-    document.querySelectorAll('.ticket-row').forEach(row => {
-        row.addEventListener('click', (event) => {
-            const radio = row.querySelector('input[type="radio"]');
-            if (!radio || radio.disabled) return;
-            if (event.target === radio) {
-                updateRowStyles();
-                return;
-            }
-            radio.checked = true;
-            updateRowStyles();
-        });
-    });
-
-    document.querySelectorAll('input[name="ticket_type"]').forEach(radio => {
-        radio.addEventListener('change', updateRowStyles);
-    });
 
     // --- 5. Razorpay Transaction & Secure Database Storage Pipeline ---
     const paymentForm = document.getElementById('payment-form');
@@ -231,8 +246,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Configuration parameters safely locked in by backend values
                 const options = {
                     "key": "rzp_live_T6j4wLEK2w7G6B",
-                    "amount": data.amount,          // Locked to the order id structure
-                    "order_id": data.order_id,      // BINDING INSTRUMENT: Stops client-side value modification dead
+                    "amount": data.amount,
+                    "order_id": data.order_id,
                     "currency": "INR",
                     "name": "CircleUp",
                     "description": `1x ${ticketLabel} Entry Ticket`,
@@ -248,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     p_email: userEmail,
                                     p_phone: userPhoneWithPrefix,
                                     p_razorpay_id: response.razorpay_payment_id,
-                                    p_order_id: response.razorpay_order_id // Send official verified Razorpay Order token
+                                    p_order_id: response.razorpay_order_id
                                 });
 
                             if (rpcError) throw rpcError;

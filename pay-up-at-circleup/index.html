@@ -69,39 +69,9 @@
                                         <th class="p-3 md:p-4 text-right">Price</th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-xs md:text-sm divide-y divide-white/5">
-                                    <tr id="row-early_bird_female" class="ticket-row hover:bg-white/5 transition-colors cursor-pointer">
-                                        <td class="p-3 md:p-4 text-center">
-                                            <input type="radio" id="ticket-early-female" name="ticket_type" value="early_bird_female" class="w-4 h-4 accent-pink-500 cursor-pointer" required>
-                                        </td>
-                                        <td class="p-3 md:p-4 font-medium text-white ticket-label">Early Bird (Female)</td>
-                                        <td class="p-3 md:p-4 text-center text-gray-400 font-mono count-display" id="count-early_bird_female">Loading...</td>
-                                        <td class="p-3 md:p-4 text-right font-semibold text-pink-400 price-display" id="price-early_bird_female">Loading...</td>
-                                    </tr>
-                                    <tr id="row-early_bird_male" class="ticket-row hover:bg-white/5 transition-colors cursor-pointer">
-                                        <td class="p-3 md:p-4 text-center">
-                                            <input type="radio" id="ticket-early-male" name="ticket_type" value="early_bird_male" class="w-4 h-4 accent-pink-500 cursor-pointer">
-                                        </td>
-                                        <td class="p-3 md:p-4 font-medium text-white ticket-label">Early Bird (Male)</td>
-                                        <td class="p-3 md:p-4 text-center text-gray-400 font-mono count-display" id="count-early_bird_male">Loading...</td>
-                                        <td class="p-3 md:p-4 text-right font-semibold text-pink-400 price-display" id="price-early_bird_male">Loading...</td>
-                                    </tr>
-                                    <tr id="row-regular_female" class="ticket-row hover:bg-white/5 transition-colors cursor-pointer">
-                                        <td class="p-3 md:p-4 text-center">
-                                            <input type="radio" id="ticket-reg-female" name="ticket_type" value="regular_female" class="w-4 h-4 accent-pink-500 cursor-pointer">
-                                        </td>
-                                        <td class="p-3 md:p-4 font-medium text-white ticket-label">Regular (Female)</td>
-                                        <td class="p-3 md:p-4 text-center text-gray-400 font-mono count-display" id="count-regular_female">Loading...</td>
-                                        <td class="p-3 md:p-4 text-right font-semibold text-pink-400 price-display" id="price-regular_female">Loading...</td>
-                                    </tr>
-                                    <tr id="row-regular_male" class="ticket-row hover:bg-white/5 transition-colors cursor-pointer">
-                                        <td class="p-3 md:p-4 text-center">
-                                            <input type="radio" id="ticket-reg-male" name="ticket_type" value="regular_male" class="w-4 h-4 accent-pink-500 cursor-pointer">
-                                        </td>
-                                        <td class="p-3 md:p-4 font-medium text-white ticket-label">Regular (Male)</td>
-                                        <td class="p-3 md:p-4 text-center text-gray-400 font-mono count-display" id="count-regular_male">Loading...</td>
-                                        <td class="p-3 md:p-4 text-right font-semibold text-pink-400 price-display" id="price-regular_male">Loading...</td>
-                                    </tr>
+                                <!-- DYNAMIC TICKETS CONTAINER (FILTERED BY is_active IN JS) -->
+                                <tbody id="ticket-rows-container" class="text-xs md:text-sm divide-y divide-white/5">
+                                    <!-- Injected via payment-script.js -->
                                 </tbody>
                             </table>
                         </div>
